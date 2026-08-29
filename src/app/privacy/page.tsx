@@ -1,0 +1,141 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy - QCS ABROAD",
+  description:
+    "How QCS ABROAD collects, uses, and protects your personal information.",
+};
+
+const sections = [
+  {
+    title: "1. Information We Collect",
+    body: [
+      "We collect information you provide directly to us, such as when you fill out a consultation form, create a student account, or contact us. This may include your name, email address, phone number, date of birth, nationality, educational background, and details about your study abroad goals.",
+      "To support your applications, we also collect academic and identity documents you choose to share with us — for example, academic transcripts and certificates, degree/mark sheets, passport and identity documents, English proficiency test scores (IELTS/TOEFL/PTE), statements of purpose, letters of recommendation, resumes/CVs, and financial or sponsorship documents.",
+      "We also automatically collect certain technical information when you visit our website, including your IP address, browser type, device information, and pages visited, through cookies and similar technologies.",
+    ],
+  },
+  {
+    title: "2. How We Use Your Information",
+    body: [
+      "We use the information and documents we collect to provide and improve our services, respond to your inquiries, match you with suitable universities and programs, prepare and submit applications on your behalf, and communicate with you about your study abroad journey.",
+      "We may also use your information to send you relevant updates, educational resources, and promotional content, which you can opt out of at any time.",
+    ],
+  },
+  {
+    title: "3. How We Share Your Information & Documents",
+    body: [
+      "A core part of our service is helping you apply to educational institutions. To do this, and with your authorization, we share your personal information and supporting documents with the third parties necessary to process your admission and related requirements.",
+      "We share only the information and documents necessary for each specific purpose, and we require these parties to handle your data responsibly. We do not sell your personal information to third parties.",
+      "We may also share information with trusted service providers who help us operate our website and deliver our services, subject to confidentiality obligations, and where required by law or to comply with a legal obligation.",
+      "The parties we may share your information and documents with include:",
+    ],
+    bullets: [
+      "Colleges, universities, and educational institutions you are applying to",
+      "Admission offices, application platforms, and university representatives",
+      "Government departments and embassies/consulates for visa and immigration processing",
+      "Test and credential-verification bodies (e.g., IELTS/TOEFL, credential assessment agencies)",
+      "Accommodation, insurance, and financial/sponsorship providers where you request such services",
+    ],
+  },
+  {
+    title: "4. Your Consent & Authorization",
+    body: [
+      "By engaging our services and submitting your documents, you authorize QCS ABROAD to share the relevant information and documents with the institutions and authorities listed above for the purpose of processing your applications and admission requirements. You may withdraw this consent at any time by contacting us, though doing so may prevent us from continuing certain services.",
+    ],
+  },
+  {
+    title: "5. Data Security",
+    body: [
+      "We implement appropriate technical and organizational measures to protect your personal information and documents against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is completely secure.",
+    ],
+  },
+  {
+    title: "6. Data Retention",
+    body: [
+      "We retain your personal information and documents only for as long as necessary to provide our services, comply with legal obligations, resolve disputes, and enforce our agreements. You may request deletion of your data as described below.",
+    ],
+  },
+  {
+    title: "7. Your Rights",
+    body: [
+      "You have the right to access, correct, or delete your personal information, and to withdraw consent for document sharing. You may also object to or restrict certain processing of your data. To exercise these rights, please contact us using the details below.",
+    ],
+  },
+  {
+    title: "8. Cookies",
+    body: [
+      "Our website uses cookies to enhance your browsing experience and analyze site traffic. You can control cookie preferences through your browser settings.",
+    ],
+  },
+  {
+    title: "9. Changes to This Policy",
+    body: [
+      "We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date.",
+    ],
+  },
+  {
+    title: "10. Contact Us",
+    body: [
+      "If you have any questions about this Privacy Policy or how we handle your data and documents, please contact us at contact@theqcs.ca.",
+    ],
+  },
+];
+
+export default function PrivacyPage() {
+  return (
+    <>
+      {/* Header */}
+      <section className="bg-primary text-white section-padding">
+        <div className="container-narrow text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Privacy Policy
+          </h1>
+          <p className="text-white/80">Last updated: August 28, 2026</p>
+        </div>
+      </section>
+
+      {/* Content */}
+      <section className="section-padding">
+        <div className="container-narrow max-w-3xl">
+          <p className="text-foreground-muted leading-relaxed mb-10">
+            At QCS ABROAD, we are committed to protecting your privacy. This
+            Privacy Policy explains how we collect, use, disclose, and safeguard
+            your information when you visit our website or use our services.
+          </p>
+
+          <div className="space-y-10">
+            {sections.map((section) => (
+              <div key={section.title}>
+                <h2 className="text-xl md:text-2xl font-bold text-primary mb-3">
+                  {section.title}
+                </h2>
+                {section.body.map((para, i) => (
+                  <p
+                    key={i}
+                    className="text-foreground-muted leading-relaxed mb-3"
+                  >
+                    {para}
+                  </p>
+                ))}
+                {"bullets" in section && section.bullets && (
+                  <ul className="mb-3 mt-1 space-y-2">
+                    {section.bullets.map((b) => (
+                      <li
+                        key={b}
+                        className="flex items-start gap-3 text-foreground-muted leading-relaxed"
+                      >
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent)]" aria-hidden="true" />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
