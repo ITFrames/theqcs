@@ -16,9 +16,20 @@
  */
 
 export const COUNTRY_PHOTOS = new Set<string>([
-  // Add slugs here once the matching public/blog/<slug>.webp file exists, e.g.:
-  // "study-in-canada",
-  // "study-in-usa",
+  "study-in-canada",
+  "study-in-usa",
+  "study-in-uk",
+  "study-in-australia",
+  "study-in-new-zealand",
+  "study-in-germany",
+  "study-in-ireland",
+  "study-in-france",
+  "study-in-netherlands",
+  "study-in-italy",
+  "study-in-spain",
+  "study-in-sweden",
+  "study-in-switzerland",
+  "study-in-singapore",
 ]);
 
 export function hasPhoto(slug: string): boolean {
