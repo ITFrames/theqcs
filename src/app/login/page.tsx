@@ -23,6 +23,7 @@ export default function LoginPage() {
   const [otpError, setOtpError] = useState<string | null>(null);
   const [devOtp, setDevOtp] = useState<string | undefined>();
   const [expiresIn, setExpiresIn] = useState(60);
+  const [issuedAt, setIssuedAt] = useState(0);
 
   const submitCredentials = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +42,7 @@ export default function LoginPage() {
       }
       setDevOtp(data.devOtp);
       setExpiresIn(data.expiresInSeconds ?? 60);
+      setIssuedAt(Date.now());
       setStep("otp");
     } catch {
       setError("Network error. Please try again.");
@@ -83,6 +85,7 @@ export default function LoginPage() {
       if (res.ok) {
         setDevOtp(data.devOtp);
         setExpiresIn(data.expiresInSeconds ?? 60);
+        setIssuedAt(Date.now());
       } else {
         setOtpError(data.error ?? "Could not resend code.");
       }
@@ -243,6 +246,7 @@ export default function LoginPage() {
             <OtpVerifier
               email={email}
               initialSeconds={expiresIn}
+              issuedAt={issuedAt}
               devOtp={devOtp}
               submitting={submitting}
               error={otpError}

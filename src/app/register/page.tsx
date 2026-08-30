@@ -51,6 +51,7 @@ export default function RegisterPage() {
   const [otpError, setOtpError] = useState<string | null>(null);
   const [devOtp, setDevOtp] = useState<string | undefined>();
   const [expiresIn, setExpiresIn] = useState(60);
+  const [issuedAt, setIssuedAt] = useState(0);
 
   const pwChecks = checkPassword(form.password);
   const pwStrength = passwordStrength(form.password);
@@ -102,6 +103,7 @@ export default function RegisterPage() {
       }
       setDevOtp(data.devOtp);
       setExpiresIn(data.expiresInSeconds ?? 60);
+      setIssuedAt(Date.now());
       setStep("otp");
     } catch {
       setError("Network error. Please try again.");
@@ -150,6 +152,7 @@ export default function RegisterPage() {
       if (res.ok) {
         setDevOtp(data.devOtp);
         setExpiresIn(data.expiresInSeconds ?? 60);
+        setIssuedAt(Date.now());
       } else {
         setOtpError(data.error ?? "Could not resend code.");
       }
@@ -374,6 +377,7 @@ export default function RegisterPage() {
             <OtpVerifier
               email={form.email}
               initialSeconds={expiresIn}
+              issuedAt={issuedAt}
               devOtp={devOtp}
               submitting={submitting}
               error={otpError}

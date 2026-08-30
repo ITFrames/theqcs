@@ -7,6 +7,13 @@ interface OtpVerifierProps {
   email: string;
   /** Seconds until the current code expires (default 60). */
   initialSeconds?: number;
+  /**
+   * Timestamp (ms) of when the current code was issued. The parent bumps this
+   * on every send/resend so the countdown resets even when initialSeconds is
+   * unchanged. Without this, a resend that returns the same expiry (60s) would
+   * not restart the timer.
+   */
+  issuedAt?: number;
   /** Dev-only code surfaced by the API so you can test without SMS/email. */
   devOtp?: string;
   submitting?: boolean;
@@ -22,6 +29,7 @@ interface OtpVerifierProps {
 export default function OtpVerifier({
   email,
   initialSeconds = 60,
+  issuedAt,
   devOtp,
   submitting = false,
   error,
@@ -31,8 +39,8 @@ export default function OtpVerifier({
   const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
 
-  // `seconds` is driven by a ticking effect. A fresh code (devOtp change) or a
-  // new expiry window resets the deadline. All time reads happen inside effects
+  // `seconds` is driven by a ticking effect. A fresh code (issuedAt changes on
+  // every resend) resets the deadline. All time reads happen inside effects
   // (side effects), never during render, so the component stays pure.
   const deadlineRef = useRef<number>(0);
   const [seconds, setSeconds] = useState(initialSeconds);
@@ -52,7 +60,7 @@ export default function OtpVerifier({
       if (tick() <= 0) clearInterval(id);
     }, 1000);
     return () => clearInterval(id);
-  }, [initialSeconds, devOtp]);
+  }, [initialSeconds, issuedAt, devOtp]);
 
   const expired = seconds <= 0;
   const code = digits.join("");
