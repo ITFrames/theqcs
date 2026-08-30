@@ -57,6 +57,7 @@ export function seedDocuments(userId: string): StudentDocument[] {
     mk("Academic", "10th Certificate", "Verified"),
     mk("Academic", "12th Certificate", "Verified"),
     mk("Academic", "Bachelor's Degree", "Under Review"),
+    mk("Academic", "Master's Degree", "Not Uploaded"),
     mk("Academic", "Transcripts", "Action Required"),
     mk("English Proficiency", "IELTS / TOEFL / PTE / Duolingo", "Verified"),
     mk("Financial", "Bank Statements", "Under Review"),

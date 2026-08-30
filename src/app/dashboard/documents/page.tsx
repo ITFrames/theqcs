@@ -1,14 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  CheckCircle2,
-  Clock,
-  AlertTriangle,
-  UploadCloud,
-  FileText,
-} from "lucide-react";
-import type { DocumentStatus, StudentDocument } from "@/lib/types";
+import { UploadCloud, CheckCircle2 } from "lucide-react";
+import type { StudentDocument, StudentProfile } from "@/lib/types";
 import {
   ACCEPT_ATTR,
   MAX_UPLOAD_MB,
@@ -16,41 +10,48 @@ import {
 } from "@/lib/uploadConstraints";
 import { trackEvent } from "@/lib/analytics";
 
-const STATUS_META: Record<
-  DocumentStatus,
-  { label: string; className: string; icon: React.ReactNode }
-> = {
-  Verified: {
-    label: "Verified",
-    className: "bg-green-100 text-green-700",
-    icon: <CheckCircle2 className="h-3.5 w-3.5" />,
-  },
-  "Under Review": {
-    label: "Under Review",
-    className: "bg-amber-100 text-amber-700",
-    icon: <Clock className="h-3.5 w-3.5" />,
-  },
-  "Action Required": {
-    label: "Action Required",
-    className: "bg-red-100 text-red-700",
-    icon: <AlertTriangle className="h-3.5 w-3.5" />,
-  },
-  "Not Uploaded": {
-    label: "Not Uploaded",
-    className: "bg-slate-100 text-slate-600",
-    icon: <FileText className="h-3.5 w-3.5" />,
-  },
+/**
+ * Ranks academic qualifications so we only show document slots relevant to the
+ * student's highest level. A student whose highest is Bachelor's shouldn't be
+ * asked for a Master's degree certificate.
+ */
+const QUALIFICATION_RANK: Record<string, number> = {
+  "High School": 1,
+  Diploma: 2,
+  "Bachelor's": 3,
+  "Master's": 4,
+  PhD: 5,
+};
+
+/**
+ * Minimum qualification rank at which a given academic document becomes
+ * relevant. Documents not listed here (identity, financial, application) always
+ * apply. Keyed by the document `name` used in the seed data.
+ */
+const DOC_MIN_RANK: Record<string, number> = {
+  "10th Certificate": 1,
+  "12th Certificate": 1,
+  "Bachelor's Degree": 3,
+  "Master's Degree": 4,
+  Transcripts: 1,
 };
 
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState<StudentDocument[]>([]);
+  const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/documents")
-      .then((r) => r.json())
-      .then((d) => setDocuments(d.documents ?? []))
+    Promise.all([
+      fetch("/api/documents").then((r) => r.json()),
+      fetch("/api/profile").then((r) => r.json()),
+    ])
+      .then(([docs, prof]) => {
+        setDocuments(docs.documents ?? []);
+        setProfile(prof.profile ?? null);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -65,38 +66,86 @@ export default function DocumentsPage() {
       setError(`"${file.name}": ${check.error}`);
       return;
     }
-    // We only persist metadata here (name/size/type); real bytes would go to
-    // storage. The server re-validates these against the same policy.
-    const res = await fetch("/api/documents", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        documentId,
-        fileName: file.name,
-        fileSize: file.size,
-        fileType: file.type,
-      }),
-    });
-    if (res.ok) {
-      const d = await res.json();
-      setDocuments(d.documents ?? []);
-      // Conversion/engagement: document uploaded (consent-gated).
-      trackEvent("upload_document", { type: "pdf" });
-    } else {
-      const d = await res.json().catch(() => ({}));
-      setError(d.error ?? "Upload failed. Please try again.");
+
+    setUploadingId(documentId);
+    try {
+      // 1) Ask our server for a signed upload URL (validates policy + auth).
+      const signRes = await fetch("/api/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          documentId,
+          fileName: file.name,
+          fileSize: file.size,
+          fileType: file.type,
+        }),
+      });
+      const signed = await signRes.json().catch(() => ({}));
+      if (!signRes.ok) {
+        setError(signed.error ?? "Could not start the upload.");
+        return;
+      }
+
+      // 2) Upload the bytes directly to Supabase Storage using the token.
+      const uploadUrl = `${signed.supabaseUrl}/storage/v1/object/upload/sign/${signed.bucket}/${signed.path}?token=${signed.token}`;
+      const putRes = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: { "Content-Type": "application/pdf" },
+        body: file,
+      });
+      if (!putRes.ok) {
+        setError("Upload to storage failed. Please try again.");
+        return;
+      }
+
+      // 3) Record the upload against the document (marks it uploaded).
+      const patchRes = await fetch("/api/documents", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          documentId,
+          fileName: file.name,
+          fileSize: file.size,
+          fileType: file.type,
+        }),
+      });
+      if (patchRes.ok) {
+        const d = await patchRes.json();
+        setDocuments(d.documents ?? []);
+        trackEvent("upload_document", { type: "pdf" });
+      } else {
+        const d = await patchRes.json().catch(() => ({}));
+        setError(d.error ?? "Could not record the upload.");
+      }
+    } catch {
+      setError("Network error during upload. Please try again.");
+    } finally {
+      setUploadingId(null);
     }
   };
 
+  // Filter documents by the student's highest qualification.
+  const visibleDocuments = useMemo(() => {
+    const rank = profile?.highestQualification
+      ? QUALIFICATION_RANK[profile.highestQualification] ?? 99
+      : 99; // unknown -> show everything
+    return documents.filter((d) => {
+      const min = DOC_MIN_RANK[d.name];
+      return min === undefined || min <= rank;
+    });
+  }, [documents, profile]);
+
   const grouped = useMemo(() => {
     const map = new Map<string, StudentDocument[]>();
-    for (const doc of documents) {
+    for (const doc of visibleDocuments) {
       map.set(doc.category, [...(map.get(doc.category) ?? []), doc]);
     }
     return Array.from(map.entries());
-  }, [documents]);
+  }, [visibleDocuments]);
 
-  const uploaded = documents.filter((d) => d.status !== "Not Uploaded").length;
+  const uploadedCount = visibleDocuments.filter(
+    (d) => d.status !== "Not Uploaded",
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -105,13 +154,16 @@ export default function DocumentsPage() {
           My Documents
         </h1>
         <p className="mt-1 text-[var(--color-foreground-muted)]">
-          {uploaded} of {documents.length} documents uploaded. Accepted format:{" "}
-          PDF only · Max {MAX_UPLOAD_MB} MB each.
+          {uploadedCount} of {visibleDocuments.length} documents uploaded.
+          Accepted format: PDF only · Max {MAX_UPLOAD_MB} MB each.
         </p>
       </div>
 
       {error && (
-        <p className="rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-600" role="alert">
+        <p
+          className="rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-600"
+          role="alert"
+        >
           {error}
         </p>
       )}
@@ -127,7 +179,12 @@ export default function DocumentsPage() {
               </h2>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 {docs.map((doc) => (
-                  <DocumentRow key={doc.id} doc={doc} onUpload={upload} />
+                  <DocumentRow
+                    key={doc.id}
+                    doc={doc}
+                    uploading={uploadingId === doc.id}
+                    onUpload={upload}
+                  />
                 ))}
               </div>
             </section>
@@ -140,14 +197,16 @@ export default function DocumentsPage() {
 
 function DocumentRow({
   doc,
+  uploading,
   onUpload,
 }: {
   doc: StudentDocument;
+  uploading: boolean;
   onUpload: (documentId: string, file: File) => void;
 }) {
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const meta = STATUS_META[doc.status];
+  const hasFile = !!doc.fileName || doc.status !== "Not Uploaded";
 
   const handleFiles = (files: FileList | null) => {
     if (files && files[0]) onUpload(doc.id, files[0]);
@@ -183,23 +242,26 @@ function DocumentRow({
             </p>
           )}
         </div>
-        <span
-          className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ${meta.className}`}
-        >
-          {meta.icon}
-          {meta.label}
-        </span>
+        {hasFile && (
+          <CheckCircle2
+            className="h-4 w-4 shrink-0 text-green-600"
+            aria-label="Uploaded"
+          />
+        )}
       </div>
 
       <button
         type="button"
+        disabled={uploading}
         onClick={() => inputRef.current?.click()}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[var(--color-border)] px-3 py-2.5 text-xs font-medium text-[var(--color-foreground-muted)] hover:border-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors"
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[var(--color-border)] px-3 py-2.5 text-xs font-medium text-[var(--color-foreground-muted)] hover:border-[var(--color-accent)] hover:text-[var(--color-primary)] disabled:opacity-60 transition-colors"
       >
         <UploadCloud className="h-4 w-4" />
-        {doc.status === "Not Uploaded"
-          ? "Drag & drop or click to upload"
-          : "Replace file"}
+        {uploading
+          ? "Uploading…"
+          : hasFile
+            ? "Replace file"
+            : "Drag & drop or click to upload"}
       </button>
       <input
         ref={inputRef}
