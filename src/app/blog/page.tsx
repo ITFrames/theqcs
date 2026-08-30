@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Clock, Sparkles, BookOpen } from "lucide-react";
 import { countryGuides } from "@/data/countryGuides";
 import CountryLandmark from "@/components/CountryLandmark";
+import { hasPhoto, photoPath } from "@/data/countryPhotos";
 
 export const metadata: Metadata = {
   title: "Study Abroad Guides by Country - QCS ABROAD",
@@ -58,18 +60,36 @@ export default function BlogPage() {
                 href={`/blog/${guide.slug}`}
                 className="group border-border-light flex flex-col overflow-hidden rounded-2xl border bg-white shadow-[var(--shadow-sm)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-xl)]"
               >
-                {/* Card header band — iconic landmark illustration */}
+                {/* Card header band — real photo when available, else the
+                    iconic landmark illustration as a graceful fallback. */}
                 <div className="relative flex h-36 items-end justify-center overflow-hidden bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)]">
-                  {/* Soft sky glow */}
-                  <span
-                    className="absolute -top-10 right-6 h-28 w-28 rounded-full bg-[var(--color-accent)]/20 blur-2xl"
-                    aria-hidden="true"
-                  />
-                  {/* Landmark silhouette in gold, sitting on the band */}
-                  <CountryLandmark
-                    slug={guide.slug}
-                    className="pointer-events-none h-28 w-full px-6 text-[var(--color-accent)] drop-shadow transition-transform duration-500 group-hover:scale-105"
-                  />
+                  {hasPhoto(guide.slug) ? (
+                    <>
+                      <Image
+                        src={photoPath(guide.slug)}
+                        alt={`Iconic scenery of ${guide.country}`}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      {/* Darken the bottom for legibility + brand cohesion. */}
+                      <span
+                        className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/60 to-transparent"
+                        aria-hidden="true"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <span
+                        className="absolute -top-10 right-6 h-28 w-28 rounded-full bg-[var(--color-accent)]/20 blur-2xl"
+                        aria-hidden="true"
+                      />
+                      <CountryLandmark
+                        slug={guide.slug}
+                        className="pointer-events-none h-28 w-full px-6 text-[var(--color-accent)] drop-shadow transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </>
+                  )}
                   {/* Flag accent badge */}
                   <span className="absolute top-3 left-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-lg shadow-sm">
                     {guide.flag}
