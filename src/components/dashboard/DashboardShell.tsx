@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   LayoutDashboard,
-  FileText,
   Compass,
   FolderOpen,
   LogOut,
@@ -17,7 +16,6 @@ import type { PublicUser } from "@/lib/types";
 
 const NAV = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-  { href: "/dashboard/applications", label: "My Applications", icon: FileText },
   { href: "/dashboard/programs", label: "Explore Programs", icon: Compass },
   { href: "/dashboard/documents", label: "Documents", icon: FolderOpen },
 ];

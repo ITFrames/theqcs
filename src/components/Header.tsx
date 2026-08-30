@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
@@ -14,8 +15,11 @@ const navLinks = [
 ];
 
 export default function Header() {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // Auth state: undefined = still checking, false = guest, true = signed in.
+  const [authed, setAuthed] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,7 +30,30 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Check session so the header reflects logged-in state.
+  useEffect(() => {
+    let active = true;
+    fetch("/api/auth/me")
+      .then((r) => {
+        if (active) setAuthed(r.ok);
+      })
+      .catch(() => {
+        if (active) setAuthed(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  const logout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    setAuthed(false);
+    closeMobileMenu();
+    router.push("/");
+    router.refresh();
+  };
 
   return (
     <header
@@ -75,18 +102,39 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="/register"
-            className="text-sm font-medium text-[var(--color-foreground-muted)] hover:text-[var(--color-primary)] transition-colors duration-200"
-          >
-            Register
-          </Link>
-          <Link
-            href="/login"
-            className="btn btn-primary ml-2 text-sm px-5 py-2"
-          >
-            Login
-          </Link>
+          {authed === true && (
+            <>
+              <Link
+                href="/dashboard"
+                className="text-sm font-medium text-[var(--color-foreground-muted)] hover:text-[var(--color-primary)] transition-colors duration-200"
+              >
+                Dashboard
+              </Link>
+              <button
+                type="button"
+                onClick={logout}
+                className="btn btn-primary ml-2 text-sm px-5 py-2"
+              >
+                Sign out
+              </button>
+            </>
+          )}
+          {authed === false && (
+            <>
+              <Link
+                href="/register"
+                className="text-sm font-medium text-[var(--color-foreground-muted)] hover:text-[var(--color-primary)] transition-colors duration-200"
+              >
+                Register
+              </Link>
+              <Link
+                href="/login"
+                className="btn btn-primary ml-2 text-sm px-5 py-2"
+              >
+                Login
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -127,20 +175,42 @@ export default function Header() {
             </Link>
           ))}
           <div className="pt-3 space-y-2">
-            <Link
-              href="/register"
-              className="btn btn-outline w-full text-center"
-              onClick={closeMobileMenu}
-            >
-              Register
-            </Link>
-            <Link
-              href="/login"
-              className="btn btn-primary w-full text-center"
-              onClick={closeMobileMenu}
-            >
-              Login
-            </Link>
+            {authed === true && (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="btn btn-outline w-full text-center"
+                  onClick={closeMobileMenu}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="btn btn-primary w-full text-center"
+                >
+                  Sign out
+                </button>
+              </>
+            )}
+            {authed === false && (
+              <>
+                <Link
+                  href="/register"
+                  className="btn btn-outline w-full text-center"
+                  onClick={closeMobileMenu}
+                >
+                  Register
+                </Link>
+                <Link
+                  href="/login"
+                  className="btn btn-primary w-full text-center"
+                  onClick={closeMobileMenu}
+                >
+                  Login
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
