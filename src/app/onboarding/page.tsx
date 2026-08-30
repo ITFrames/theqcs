@@ -57,13 +57,27 @@ const FUNDING_METHODS: FundingMethod[] = [
 
 const INTAKES = ["Spring", "Summer", "Fall", "Winter"];
 
+// Validation bounds:
+// - DOB: applicants must be at least 15 years old (max DOB = today - 15 years).
+// - Expected start year: cannot be in the past (min = current year).
+const MIN_AGE_YEARS = 15;
+const now = new Date();
+const CURRENT_YEAR = now.getFullYear();
+const MAX_DOB = new Date(
+  now.getFullYear() - MIN_AGE_YEARS,
+  now.getMonth(),
+  now.getDate(),
+)
+  .toISOString()
+  .split("T")[0];
+
 type Draft = Partial<StudentProfile>;
 
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [data, setData] = useState<Draft>({
-    englishTest: "Not Taken Yet",
+    englishTests: [],
     destinations: [],
   });
   const [saving, setSaving] = useState(false);
@@ -71,6 +85,29 @@ export default function OnboardingPage() {
 
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) =>
     setData((prev) => ({ ...prev, [key]: value }));
+
+  // Toggle an English test in the multi-select. "Not Taken Yet" is exclusive:
+  // selecting it clears the others, and selecting any real test clears it.
+  const toggleEnglishTest = (test: EnglishTest) =>
+    setData((prev) => {
+      const current = prev.englishTests ?? [];
+      let next: EnglishTest[];
+      if (test === "Not Taken Yet") {
+        next = current.includes("Not Taken Yet") ? [] : ["Not Taken Yet"];
+      } else {
+        const withoutNotTaken = current.filter((t) => t !== "Not Taken Yet");
+        next = withoutNotTaken.includes(test)
+          ? withoutNotTaken.filter((t) => t !== test)
+          : [...withoutNotTaken, test];
+      }
+      return { ...prev, englishTests: next };
+    });
+
+  const setEnglishScore = (test: EnglishTest, score: string) =>
+    setData((prev) => ({
+      ...prev,
+      englishScores: { ...(prev.englishScores ?? {}), [test]: score },
+    }));
 
   const toggleDestination = (code: string) =>
     setData((prev) => {
@@ -94,6 +131,11 @@ export default function OnboardingPage() {
 
   const next = async () => {
     setError(null);
+    // Step 0: enforce minimum age when a DOB is provided.
+    if (step === 0 && data.dateOfBirth && data.dateOfBirth > MAX_DOB) {
+      setError(`You must be at least ${MIN_AGE_YEARS} years old to register.`);
+      return;
+    }
     setSaving(true);
     try {
       await saveStep(data);
@@ -107,6 +149,14 @@ export default function OnboardingPage() {
 
   const finish = async () => {
     setError(null);
+    // Expected start year cannot be in the past.
+    if (
+      data.expectedStartYear &&
+      Number(data.expectedStartYear) < CURRENT_YEAR
+    ) {
+      setError("Expected start year cannot be in the past.");
+      return;
+    }
     setSaving(true);
     try {
       await saveStep({ ...data, onboardingComplete: true });
@@ -188,9 +238,15 @@ export default function OnboardingPage() {
                   <TextInput
                     id="dob"
                     type="date"
+                    max={MAX_DOB}
                     value={data.dateOfBirth ?? ""}
                     onChange={(e) => set("dateOfBirth", e.target.value)}
                   />
+                  {data.dateOfBirth && data.dateOfBirth > MAX_DOB && (
+                    <p className="mt-1 text-xs text-red-600">
+                      You must be at least {MIN_AGE_YEARS} years old.
+                    </p>
+                  )}
                 </LabeledField>
                 <LabeledField label="Gender" htmlFor="gender" optional>
                   <SelectInput
@@ -279,12 +335,21 @@ export default function OnboardingPage() {
                     placeholder="e.g. Computer Science"
                   />
                 </LabeledField>
-                <LabeledField label="Graduation Year" htmlFor="gradYear">
+                <LabeledField label="Graduation Year (From)" htmlFor="gradFrom">
                   <TextInput
-                    id="gradYear"
+                    id="gradFrom"
                     inputMode="numeric"
-                    value={data.graduationYear ?? ""}
-                    onChange={(e) => set("graduationYear", e.target.value)}
+                    value={data.graduationYearFrom ?? ""}
+                    onChange={(e) => set("graduationYearFrom", e.target.value)}
+                    placeholder="2020"
+                  />
+                </LabeledField>
+                <LabeledField label="Graduation Year (Till)" htmlFor="gradTo">
+                  <TextInput
+                    id="gradTo"
+                    inputMode="numeric"
+                    value={data.graduationYearTo ?? ""}
+                    onChange={(e) => set("graduationYearTo", e.target.value)}
                     placeholder="2024"
                   />
                 </LabeledField>
@@ -301,40 +366,124 @@ export default function OnboardingPage() {
                 </LabeledField>
               </div>
 
+              {/* Master's education (optional) */}
               <div className="mt-6">
-                <p className="mb-2 text-sm font-medium text-[var(--color-foreground)]">
-                  English language test
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {ENGLISH_TESTS.map((test) => (
-                    <button
-                      key={test}
-                      type="button"
-                      onClick={() => set("englishTest", test)}
-                      className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all ${
-                        data.englishTest === test
-                          ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
-                          : "border-[var(--color-border)] bg-white text-[var(--color-foreground-muted)] hover:border-[var(--color-primary)]"
-                      }`}
-                    >
-                      {test}
-                    </button>
-                  ))}
-                </div>
+                <label className="flex cursor-pointer items-center gap-2.5">
+                  <input
+                    type="checkbox"
+                    checked={data.hasMasters ?? false}
+                    onChange={(e) => set("hasMasters", e.target.checked)}
+                    className="h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-primary)] focus:ring-[var(--color-accent)]"
+                  />
+                  <span className="text-sm font-medium text-[var(--color-foreground)]">
+                    I have completed (or am pursuing) a Master&apos;s degree
+                  </span>
+                </label>
 
-                {data.englishTest && data.englishTest !== "Not Taken Yet" && (
-                  <div className="mt-4">
+                {data.hasMasters && (
+                  <div className="mt-4 grid grid-cols-1 gap-4 rounded-xl border border-[var(--color-border-light)] bg-[var(--color-background-alt)] p-4 sm:grid-cols-2">
                     <LabeledField
-                      label={`${data.englishTest} Score`}
-                      htmlFor="englishScore"
+                      label="Master's Institution"
+                      htmlFor="mInstitution"
                     >
                       <TextInput
-                        id="englishScore"
-                        value={data.englishScore ?? ""}
-                        onChange={(e) => set("englishScore", e.target.value)}
-                        placeholder="e.g. 7.5"
+                        id="mInstitution"
+                        value={data.mastersInstitution ?? ""}
+                        onChange={(e) =>
+                          set("mastersInstitution", e.target.value)
+                        }
                       />
                     </LabeledField>
+                    <LabeledField
+                      label="Master's Field of Study"
+                      htmlFor="mField"
+                    >
+                      <TextInput
+                        id="mField"
+                        value={data.mastersField ?? ""}
+                        onChange={(e) => set("mastersField", e.target.value)}
+                        placeholder="e.g. Data Science"
+                      />
+                    </LabeledField>
+                    <LabeledField
+                      label="Master's Graduation Year"
+                      htmlFor="mGradYear"
+                    >
+                      <TextInput
+                        id="mGradYear"
+                        inputMode="numeric"
+                        value={data.mastersGraduationYear ?? ""}
+                        onChange={(e) =>
+                          set("mastersGraduationYear", e.target.value)
+                        }
+                        placeholder="2026"
+                      />
+                    </LabeledField>
+                    <LabeledField
+                      label="Master's Grade / GPA"
+                      htmlFor="mGrade"
+                    >
+                      <TextInput
+                        id="mGrade"
+                        value={data.mastersGrade ?? ""}
+                        onChange={(e) => set("mastersGrade", e.target.value)}
+                        placeholder="e.g. 3.7 GPA"
+                      />
+                    </LabeledField>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6">
+                <p className="mb-1 text-sm font-medium text-[var(--color-foreground)]">
+                  English language test
+                </p>
+                <p className="mb-2 text-xs text-[var(--color-foreground-subtle)]">
+                  Select all that apply. Enter your score for each test taken.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {ENGLISH_TESTS.map((test) => {
+                    const selected = (data.englishTests ?? []).includes(test);
+                    return (
+                      <button
+                        key={test}
+                        type="button"
+                        onClick={() => toggleEnglishTest(test)}
+                        className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all ${
+                          selected
+                            ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
+                            : "border-[var(--color-border)] bg-white text-[var(--color-foreground-muted)] hover:border-[var(--color-primary)]"
+                        }`}
+                      >
+                        {test}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Per-test score fields for each selected real test. */}
+                {(data.englishTests ?? []).filter(
+                  (t) => t !== "Not Taken Yet",
+                ).length > 0 && (
+                  <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    {(data.englishTests ?? [])
+                      .filter((t) => t !== "Not Taken Yet")
+                      .map((test) => (
+                        <LabeledField
+                          key={test}
+                          label={`${test} Score`}
+                          htmlFor={`score-${test}`}
+                        >
+                          <TextInput
+                            id={`score-${test}`}
+                            value={data.englishScores?.[test] ?? ""}
+                            onChange={(e) =>
+                              setEnglishScore(test, e.target.value)
+                            }
+                            placeholder="e.g. 7.5"
+                          />
+                        </LabeledField>
+                      ))}
                   </div>
                 )}
               </div>
@@ -412,11 +561,19 @@ export default function OnboardingPage() {
                 >
                   <TextInput
                     id="startYear"
+                    type="number"
                     inputMode="numeric"
+                    min={CURRENT_YEAR}
                     value={data.expectedStartYear ?? ""}
                     onChange={(e) => set("expectedStartYear", e.target.value)}
-                    placeholder="2026"
+                    placeholder={String(CURRENT_YEAR)}
                   />
+                  {data.expectedStartYear &&
+                    Number(data.expectedStartYear) < CURRENT_YEAR && (
+                      <p className="mt-1 text-xs text-red-600">
+                        Start year cannot be in the past.
+                      </p>
+                    )}
                 </LabeledField>
                 <LabeledField label="Approximate Budget" htmlFor="budget">
                   <TextInput

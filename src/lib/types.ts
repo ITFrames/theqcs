@@ -63,10 +63,24 @@ export interface StudentProfile {
   highestQualification?: string;
   institutionName?: string;
   fieldOfStudy?: string;
-  graduationYear?: string;
+  graduationYear?: string; // legacy single value (kept for old records)
+  graduationYearFrom?: string;
+  graduationYearTo?: string;
   grade?: string;
+
+  // English tests (multi-select). `englishTest`/`englishScore` are kept for
+  // backward compatibility; new data uses the array + per-test score map.
   englishTest?: EnglishTest;
   englishScore?: string;
+  englishTests?: EnglishTest[];
+  englishScores?: Partial<Record<EnglishTest, string>>;
+
+  // Optional Master's education details (shown when the student has a Master's).
+  hasMasters?: boolean;
+  mastersInstitution?: string;
+  mastersField?: string;
+  mastersGraduationYear?: string;
+  mastersGrade?: string;
 
   // Step 3 — Study goals
   destinations?: string[];

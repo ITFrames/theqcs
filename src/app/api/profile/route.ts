@@ -31,58 +31,51 @@ export async function PATCH(request: Request) {
   }
 
   // Only allow known profile fields; never let the client change userId.
-  const {
-    dateOfBirth,
-    gender,
-    nationality,
-    currentCountry,
-    city,
-    whatsapp,
-    highestQualification,
-    institutionName,
-    fieldOfStudy,
-    graduationYear,
-    grade,
-    englishTest,
-    englishScore,
-    destinations,
-    preferredProgram,
-    studyLevel,
-    preferredIntake,
-    expectedStartYear,
-    budget,
-    fundingMethod,
-    onboardingComplete,
-  } = body;
+  // Allow-list of profile fields a client may set (never userId/timestamps).
+  const ALLOWED_FIELDS: (keyof StudentProfile)[] = [
+    // Personal
+    "dateOfBirth",
+    "gender",
+    "nationality",
+    "currentCountry",
+    "city",
+    "whatsapp",
+    // Education
+    "highestQualification",
+    "institutionName",
+    "fieldOfStudy",
+    "graduationYear",
+    "graduationYearFrom",
+    "graduationYearTo",
+    "grade",
+    "englishTest",
+    "englishScore",
+    "englishTests",
+    "englishScores",
+    "hasMasters",
+    "mastersInstitution",
+    "mastersField",
+    "mastersGraduationYear",
+    "mastersGrade",
+    // Study goals
+    "destinations",
+    "preferredProgram",
+    "studyLevel",
+    "preferredIntake",
+    "expectedStartYear",
+    "budget",
+    "fundingMethod",
+    // Meta
+    "onboardingComplete",
+  ];
 
-  const patch: Partial<StudentProfile> = {
-    dateOfBirth,
-    gender,
-    nationality,
-    currentCountry,
-    city,
-    whatsapp,
-    highestQualification,
-    institutionName,
-    fieldOfStudy,
-    graduationYear,
-    grade,
-    englishTest,
-    englishScore,
-    destinations,
-    preferredProgram,
-    studyLevel,
-    preferredIntake,
-    expectedStartYear,
-    budget,
-    fundingMethod,
-    onboardingComplete,
-  };
-
-  // Drop undefined keys so we only merge what was actually sent.
-  (Object.keys(patch) as (keyof StudentProfile)[]).forEach((k) => {
-    if (patch[k] === undefined) delete patch[k];
-  });
+  const patch: Partial<StudentProfile> = {};
+  for (const key of ALLOWED_FIELDS) {
+    if (body[key] !== undefined) {
+      // Safe: key is from our allow-list and body is Partial<StudentProfile>.
+      (patch as Record<string, unknown>)[key] = body[key];
+    }
+  }
 
   const profile = await db.updateProfile(user.id, patch);
   return NextResponse.json({ profile });
