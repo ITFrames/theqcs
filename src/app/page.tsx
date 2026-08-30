@@ -27,6 +27,7 @@ import FlightRoutes from "@/components/FlightRoutes";
 import DestinationsGrid from "@/components/DestinationsGrid";
 import StudyMatcher from "@/components/StudyMatcher";
 import HeroBackground from "@/components/HeroBackground";
+import SuccessStories from "@/components/SuccessStories";
 import Image from "next/image";
 
 const stats = [
@@ -504,6 +505,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Instagram Success Stories (consent-gated) */}
+      <SuccessStories />
 
       {/* Testimonials */}
       <section

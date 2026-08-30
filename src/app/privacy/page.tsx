@@ -82,24 +82,31 @@ const sections = [
     bullets: [
       "Google (Google Analytics 4 & Google Ads) — website analytics and advertising/conversion measurement.",
       "Meta Platforms (Meta Pixel) — advertising and conversion measurement on Facebook and Instagram.",
+      "Instagram / Meta (embedded posts) — our \u201cSuccess Stories\u201d section can embed Instagram posts. These embeds load only after you accept marketing cookies and may set cookies from Meta. Until then, we show a placeholder instead.",
       "Vercel (Vercel Analytics) — privacy-friendly, aggregate traffic analytics.",
     ],
   },
   {
-    title: "10. Managing or Withdrawing Consent",
+    title: "10. Student Success Stories",
+    body: [
+      "We may feature student success stories (such as a first name and photo) on our website and social media. We only publish these with the student\u2019s permission, and we do not display sensitive details such as passport numbers or visa document contents. If you are featured and would like your story removed, contact us at contact@theqcs.ca and we will take it down.",
+    ],
+  },
+  {
+    title: "11. Managing or Withdrawing Consent",
     body: [
       "You can change or withdraw your cookie consent at any time — it is as easy to withdraw as it was to give. Use the \u201cCookie Preferences\u201d link in the website footer to re-open the consent settings and update your choices, or use \u201cReject all\u201d to disable analytics and advertising cookies. You can also block or delete cookies through your browser settings.",
       "We do not use the sensitive documents you share with us (such as passports, transcripts, or financial documents) for advertising or profiling.",
     ],
   },
   {
-    title: "11. Changes to This Policy",
+    title: "12. Changes to This Policy",
     body: [
       "We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date.",
     ],
   },
   {
-    title: "12. Contact Us",
+    title: "13. Contact Us",
     body: [
       "If you have any questions about this Privacy Policy or how we handle your data and documents, please contact us at contact@theqcs.ca.",
     ],
