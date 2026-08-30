@@ -9,6 +9,7 @@ import {
   MapPin,
   MessageCircle,
 } from "lucide-react";
+import CookiePreferencesButton from "@/components/consent/CookiePreferencesButton";
 
 const quickLinks = [
   { href: "/", label: "Home" },
@@ -163,6 +164,7 @@ export default function Footer() {
             >
               Terms of Service
             </Link>
+            <CookiePreferencesButton className="text-xs text-white/50 hover:text-white/80 transition-colors duration-200 cursor-pointer" />
           </div>
         </div>
 

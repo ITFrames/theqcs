@@ -8,6 +8,7 @@ import {
   SelectInput,
   TextInput,
 } from "@/components/ui/FormControls";
+import { trackEvent } from "@/lib/analytics";
 import type {
   EnglishTest,
   FundingMethod,
@@ -109,6 +110,12 @@ export default function OnboardingPage() {
     setSaving(true);
     try {
       await saveStep({ ...data, onboardingComplete: true });
+      // Conversion: onboarding completed (consent-gated inside trackEvent).
+      trackEvent(
+        "complete_onboarding",
+        { destinations: (data.destinations ?? []).length },
+        { metaStandardEvent: "SubmitApplication" },
+      );
       router.push("/dashboard");
     } catch {
       setError("Could not complete onboarding. Please try again.");

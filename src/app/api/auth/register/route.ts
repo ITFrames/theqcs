@@ -45,44 +45,58 @@ export async function POST(request: Request) {
     );
   }
 
-  const existing = await db.findUserByEmail(email);
-  if (existing && existing.emailVerified) {
+  try {
+    const existing = await db.findUserByEmail(email);
+    if (existing && existing.emailVerified) {
+      return NextResponse.json(
+        { error: "An account with this email already exists. Please sign in." },
+        { status: 409 },
+      );
+    }
+
+    if (!existing) {
+      await db.createUser({ firstName, lastName, email, phone, password });
+    }
+
+    const code = generateOtpCode();
+    await db.saveOtp({
+      email,
+      code,
+      expiresAt: Date.now() + OTP_TTL_MS,
+      purpose: "register",
+      attempts: 0,
+    });
+
+    // Deliver by email (Resend). Falls back to console logging in dev when no
+    // provider is configured. Only surface the code to the client on that dev
+    // fallback — never when it was really emailed, and never in production.
+    const delivery = await sendOtpEmail(email, code, "register");
+    const exposeCode =
+      delivery.devFallback && process.env.NODE_ENV !== "production";
+
+    if (delivery.error) {
+      return NextResponse.json(
+        { error: "We couldn't send your code right now. Please try again." },
+        { status: 502 },
+      );
+    }
+
+    return NextResponse.json({
+      ok: true,
+      message: "Verification code sent.",
+      expiresInSeconds: OTP_TTL_MS / 1000,
+      ...(exposeCode ? { devOtp: code } : {}),
+    });
+  } catch (err) {
+    // Most likely a storage/configuration problem (e.g. Supabase schema not
+    // created). Log server-side, return a clean error to the client.
+    console.error("[qcs] register failed:", err);
     return NextResponse.json(
-      { error: "An account with this email already exists. Please sign in." },
-      { status: 409 },
+      {
+        error:
+          "We couldn't complete your registration right now. Please try again later.",
+      },
+      { status: 500 },
     );
   }
-
-  if (!existing) {
-    await db.createUser({ firstName, lastName, email, phone, password });
-  }
-
-  const code = generateOtpCode();
-  await db.saveOtp({
-    email,
-    code,
-    expiresAt: Date.now() + OTP_TTL_MS,
-    purpose: "register",
-    attempts: 0,
-  });
-
-  // Deliver by email (Resend). Falls back to console logging in dev when no
-  // provider is configured. Only surface the code to the client on that dev
-  // fallback — never when it was really emailed, and never in production.
-  const delivery = await sendOtpEmail(email, code, "register");
-  const exposeCode = delivery.devFallback && process.env.NODE_ENV !== "production";
-
-  if (delivery.error) {
-    return NextResponse.json(
-      { error: "We couldn't send your code right now. Please try again." },
-      { status: 502 },
-    );
-  }
-
-  return NextResponse.json({
-    ok: true,
-    message: "Verification code sent.",
-    expiresInSeconds: OTP_TTL_MS / 1000,
-    ...(exposeCode ? { devOtp: code } : {}),
-  });
 }

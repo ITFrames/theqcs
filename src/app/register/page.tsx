@@ -14,6 +14,7 @@ import {
   Shield,
 } from "lucide-react";
 import OtpVerifier from "@/components/auth/OtpVerifier";
+import { trackEvent } from "@/lib/analytics";
 import {
   validateRegistration,
   hasErrors,
@@ -123,6 +124,12 @@ export default function RegisterPage() {
         setOtpError(data.error ?? "Verification failed.");
         return;
       }
+      // Conversion: registration completed (consent-gated inside trackEvent).
+      trackEvent(
+        "sign_up",
+        { method: "email" },
+        { metaStandardEvent: "CompleteRegistration" },
+      );
       router.push(data.redirect ?? "/onboarding");
     } catch {
       setOtpError("Network error. Please try again.");

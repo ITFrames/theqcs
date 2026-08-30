@@ -63,19 +63,43 @@ const sections = [
     ],
   },
   {
-    title: "8. Cookies",
+    title: "8. Cookies & Tracking Technologies",
     body: [
-      "Our website uses cookies to enhance your browsing experience and analyze site traffic. You can control cookie preferences through your browser settings.",
+      "We use cookies and similar technologies to operate our website, understand how it is used, and — with your consent — to measure and deliver relevant advertising. We group cookies into three categories:",
+    ],
+    bullets: [
+      "Strictly necessary — required for core functionality such as signing in, keeping your session secure, and remembering your cookie choices. These are always active and do not require consent.",
+      "Analytics — help us understand traffic and how visitors use the site so we can improve it. Loaded only if you accept analytics cookies.",
+      "Advertising — used to show and measure relevant study-abroad ads across other sites and to attribute sign-ups and enquiries to campaigns. Loaded only if you accept advertising cookies.",
     ],
   },
   {
-    title: "9. Changes to This Policy",
+    title: "9. Consent & Third-Party Processors",
+    body: [
+      "When you first visit, we ask for your consent before loading any non-essential (analytics or advertising) cookies. Until you opt in, only strictly necessary cookies are used. We use Google Consent Mode so that Google tags respect your choice.",
+      "Where you consent, non-essential technologies may be provided by the following processors:",
+    ],
+    bullets: [
+      "Google (Google Analytics 4 & Google Ads) — website analytics and advertising/conversion measurement.",
+      "Meta Platforms (Meta Pixel) — advertising and conversion measurement on Facebook and Instagram.",
+      "Vercel (Vercel Analytics) — privacy-friendly, aggregate traffic analytics.",
+    ],
+  },
+  {
+    title: "10. Managing or Withdrawing Consent",
+    body: [
+      "You can change or withdraw your cookie consent at any time — it is as easy to withdraw as it was to give. Use the \u201cCookie Preferences\u201d link in the website footer to re-open the consent settings and update your choices, or use \u201cReject all\u201d to disable analytics and advertising cookies. You can also block or delete cookies through your browser settings.",
+      "We do not use the sensitive documents you share with us (such as passports, transcripts, or financial documents) for advertising or profiling.",
+    ],
+  },
+  {
+    title: "11. Changes to This Policy",
     body: [
       "We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date.",
     ],
   },
   {
-    title: "10. Contact Us",
+    title: "12. Contact Us",
     body: [
       "If you have any questions about this Privacy Policy or how we handle your data and documents, please contact us at contact@theqcs.ca.",
     ],

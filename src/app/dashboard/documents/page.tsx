@@ -14,6 +14,7 @@ import {
   MAX_UPLOAD_MB,
   validateUpload,
 } from "@/lib/uploadConstraints";
+import { trackEvent } from "@/lib/analytics";
 
 const STATUS_META: Record<
   DocumentStatus,
@@ -79,6 +80,8 @@ export default function DocumentsPage() {
     if (res.ok) {
       const d = await res.json();
       setDocuments(d.documents ?? []);
+      // Conversion/engagement: document uploaded (consent-gated).
+      trackEvent("upload_document", { type: "pdf" });
     } else {
       const d = await res.json().catch(() => ({}));
       setError(d.error ?? "Upload failed. Please try again.");

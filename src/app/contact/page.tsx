@@ -14,6 +14,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import Turnstile from "@/components/Turnstile";
+import { trackEvent } from "@/lib/analytics";
 
 const serviceOptions = [
   "University Admissions Counseling",
@@ -114,6 +115,12 @@ export default function ContactPage() {
         setError(json.error ?? "Something went wrong. Please try again.");
         return;
       }
+      // Conversion: contact enquiry submitted (consent-gated inside trackEvent).
+      trackEvent(
+        "generate_lead",
+        { form: "contact" },
+        { metaStandardEvent: "Lead" },
+      );
       setSubmitted(true);
     } catch {
       setError("Network error. Please try again.");

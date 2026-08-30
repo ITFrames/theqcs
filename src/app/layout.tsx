@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import { ConsentProvider } from "@/components/consent/ConsentProvider";
+import ConsentBanner from "@/components/consent/ConsentBanner";
+import ConsentedAnalytics from "@/components/consent/ConsentedAnalytics";
 import "./globals.css";
 
 const inter = Inter({
@@ -35,10 +38,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         className="min-h-full flex flex-col antialiased"
         suppressHydrationWarning
       >
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <FloatingWhatsApp />
+        <ConsentProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <FloatingWhatsApp />
+          <ConsentBanner />
+          <ConsentedAnalytics />
+        </ConsentProvider>
       </body>
     </html>
   );
