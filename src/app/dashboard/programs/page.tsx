@@ -9,9 +9,10 @@ import {
   CalendarDays,
   CheckCircle2,
   XCircle,
+  Sparkles,
 } from "lucide-react";
 import { fieldInputClass } from "@/components/ui/FormControls";
-import type { Program } from "@/lib/types";
+import type { Program, StudentProfile } from "@/lib/types";
 
 interface Filters {
   q: string;
@@ -23,9 +24,12 @@ interface Filters {
 
 export default function ProgramsPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
+  const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [shortlist, setShortlist] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"all" | "shortlist">("all");
+  // When true, results are pre-filtered to the student's onboarding goals.
+  const [matchProfile, setMatchProfile] = useState(true);
   const [filters, setFilters] = useState<Filters>({
     q: "",
     country: "",
@@ -35,12 +39,14 @@ export default function ProgramsPage() {
   });
 
   useEffect(() => {
-    fetch("/api/programs")
-      .then((r) => r.json())
-      .then((d) => {
-        setPrograms(d.programs ?? []);
-        setShortlist(d.shortlist ?? []);
-        // Honour ?tab=shortlist deep link from the dashboard summary card.
+    Promise.all([
+      fetch("/api/programs").then((r) => r.json()),
+      fetch("/api/profile").then((r) => r.json()),
+    ])
+      .then(([progs, prof]) => {
+        setPrograms(progs.programs ?? []);
+        setShortlist(progs.shortlist ?? []);
+        setProfile(prof.profile ?? null);
         const params = new URLSearchParams(window.location.search);
         if (params.get("tab") === "shortlist") setTab("shortlist");
       })
@@ -78,11 +84,37 @@ export default function ProgramsPage() {
     [programs],
   );
 
+  // Does this program align with the student's onboarding goals?
+  const matchesProfile = useMemo(() => {
+    return (p: Program): boolean => {
+      if (!profile) return true;
+      // Destination match (profile.destinations holds country names).
+      if (
+        profile.destinations &&
+        profile.destinations.length > 0 &&
+        !profile.destinations.includes(p.country)
+      )
+        return false;
+      // Study level match.
+      if (profile.studyLevel && p.studyLevel !== profile.studyLevel)
+        return false;
+      // Budget: parse first number from the free-text budget field.
+      if (profile.budget) {
+        const budgetNum = Number(profile.budget.replace(/[^0-9]/g, ""));
+        if (budgetNum > 0 && p.tuition > budgetNum) return false;
+      }
+      return true;
+    };
+  }, [profile]);
+
   const filtered = useMemo(() => {
-    const base = tab === "shortlist"
-      ? programs.filter((p) => shortlist.includes(p.id))
-      : programs;
+    const base =
+      tab === "shortlist"
+        ? programs.filter((p) => shortlist.includes(p.id))
+        : programs;
     return base.filter((p) => {
+      // Profile-based pre-filter (only on the "all" tab).
+      if (matchProfile && tab === "all" && !matchesProfile(p)) return false;
       if (
         filters.q &&
         !`${p.university} ${p.program}`
@@ -98,7 +130,15 @@ export default function ProgramsPage() {
         return false;
       return true;
     });
-  }, [programs, shortlist, tab, filters]);
+  }, [programs, shortlist, tab, filters, matchProfile, matchesProfile]);
+
+  // Do we have any goals to match against? (controls whether we show the toggle)
+  const hasGoals = !!(
+    profile &&
+    ((profile.destinations && profile.destinations.length > 0) ||
+      profile.studyLevel ||
+      profile.budget)
+  );
 
   return (
     <div className="space-y-6">
@@ -129,6 +169,49 @@ export default function ProgramsPage() {
           </button>
         ))}
       </div>
+
+      {/* Matched-to-goals toggle (only meaningful on the All tab with goals) */}
+      {tab === "all" && hasGoals && (
+        <button
+          type="button"
+          onClick={() => setMatchProfile((m) => !m)}
+          className={`flex w-full items-center justify-between gap-3 rounded-xl border p-4 text-left transition-colors ${
+            matchProfile
+              ? "border-[var(--color-accent)] bg-[#fdf8ef]"
+              : "border-[var(--color-border-light)] bg-white"
+          }`}
+          style={{ boxShadow: "var(--shadow-sm)" }}
+        >
+          <span className="flex items-center gap-3">
+            <Sparkles
+              className={`h-5 w-5 ${matchProfile ? "text-[var(--color-accent-dark)]" : "text-[var(--color-foreground-subtle)]"}`}
+            />
+            <span>
+              <span className="block text-sm font-semibold text-[var(--color-foreground)]">
+                Matched to your goals
+              </span>
+              <span className="block text-xs text-[var(--color-foreground-muted)]">
+                Showing programs that fit your preferred destinations, study
+                level{profile?.budget ? ", and budget" : ""}. Tap to see all
+                programs.
+              </span>
+            </span>
+          </span>
+          <span
+            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
+              matchProfile
+                ? "bg-[var(--color-accent)]"
+                : "bg-[var(--color-border)]"
+            }`}
+          >
+            <span
+              className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
+                matchProfile ? "translate-x-5" : "translate-x-0.5"
+              }`}
+            />
+          </span>
+        </button>
+      )}
 
       {/* Filters */}
       <div
@@ -197,11 +280,25 @@ export default function ProgramsPage() {
       {loading ? (
         <p className="text-sm text-[var(--color-foreground-muted)]">Loading…</p>
       ) : filtered.length === 0 ? (
-        <p className="rounded-xl bg-white p-6 text-sm text-[var(--color-foreground-muted)]">
-          {tab === "shortlist"
-            ? "Your shortlist is empty. Tap the heart on any program to save it."
-            : "No programs match your filters."}
-        </p>
+        <div className="rounded-xl bg-white p-6 text-sm text-[var(--color-foreground-muted)]">
+          {tab === "shortlist" ? (
+            "Your shortlist is empty. Tap the heart on any program to save it."
+          ) : matchProfile && hasGoals ? (
+            <>
+              No programs match your goals with the current filters.{" "}
+              <button
+                type="button"
+                onClick={() => setMatchProfile(false)}
+                className="font-semibold text-[var(--color-accent-dark)] underline"
+              >
+                Show all programs
+              </button>
+              .
+            </>
+          ) : (
+            "No programs match your filters."
+          )}
+        </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((p) => (

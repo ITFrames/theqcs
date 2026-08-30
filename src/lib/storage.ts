@@ -65,3 +65,11 @@ export async function createSignedUpload(
   }
   return { path: data.path, token: data.token };
 }
+
+/** Removes a stored document file. No-op when Storage isn't configured. */
+export async function deleteFile(path: string): Promise<void> {
+  const supabase = sb();
+  if (!supabase) return;
+  const { error } = await supabase.storage.from(DOCUMENTS_BUCKET).remove([path]);
+  if (error) throw new Error(`deleteFile failed: ${error.message}`);
+}

@@ -52,18 +52,18 @@ export function seedDocuments(userId: string): StudentDocument[] {
   ): StudentDocument => ({ id: randomUUID(), userId, category, name, status });
 
   return [
-    mk("Identity", "Passport", "Verified"),
-    mk("Identity", "Photograph", "Verified"),
-    mk("Academic", "10th Certificate", "Verified"),
-    mk("Academic", "12th Certificate", "Verified"),
-    mk("Academic", "Bachelor's Degree", "Under Review"),
+    mk("Identity", "Passport", "Not Uploaded"),
+    mk("Identity", "Photograph", "Not Uploaded"),
+    mk("Academic", "10th Certificate", "Not Uploaded"),
+    mk("Academic", "12th Certificate", "Not Uploaded"),
+    mk("Academic", "Bachelor's Degree", "Not Uploaded"),
     mk("Academic", "Master's Degree", "Not Uploaded"),
-    mk("Academic", "Transcripts", "Action Required"),
-    mk("English Proficiency", "IELTS / TOEFL / PTE / Duolingo", "Verified"),
-    mk("Financial", "Bank Statements", "Under Review"),
+    mk("Academic", "Transcripts", "Not Uploaded"),
+    mk("English Proficiency", "IELTS / TOEFL / PTE / Duolingo", "Not Uploaded"),
+    mk("Financial", "Bank Statements", "Not Uploaded"),
     mk("Financial", "Education Loan Documents", "Not Uploaded"),
-    mk("Application", "Statement of Purpose", "Verified"),
-    mk("Application", "Resume / CV", "Verified"),
+    mk("Application", "Statement of Purpose", "Not Uploaded"),
+    mk("Application", "Resume / CV", "Not Uploaded"),
     mk("Application", "Letters of Recommendation", "Not Uploaded"),
   ];
 }

@@ -121,6 +121,7 @@ export interface Application {
 }
 
 export type DocumentStatus =
+  | "Uploaded"
   | "Verified"
   | "Under Review"
   | "Action Required"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { UploadCloud, CheckCircle2 } from "lucide-react";
+import { UploadCloud, CheckCircle2, Trash2 } from "lucide-react";
 import type { StudentDocument, StudentProfile } from "@/lib/types";
 import {
   ACCEPT_ATTR,
@@ -35,6 +35,17 @@ const DOC_MIN_RANK: Record<string, number> = {
   "Master's Degree": 4,
   Transcripts: 1,
 };
+
+/** Documents required for every applicant (show a "Required" badge). */
+const MANDATORY_DOCS = new Set<string>([
+  "Passport",
+  "Photograph",
+  "10th Certificate",
+  "12th Certificate",
+  "Transcripts",
+  "IELTS / TOEFL / PTE / Duolingo",
+  "Statement of Purpose",
+]);
 
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState<StudentDocument[]>([]);
@@ -124,6 +135,29 @@ export default function DocumentsPage() {
     }
   };
 
+  const deleteDoc = async (documentId: string, fileName?: string) => {
+    setError(null);
+    setUploadingId(documentId);
+    try {
+      const res = await fetch("/api/documents", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ documentId, fileName }),
+      });
+      if (res.ok) {
+        const d = await res.json();
+        setDocuments(d.documents ?? []);
+      } else {
+        const d = await res.json().catch(() => ({}));
+        setError(d.error ?? "Could not delete the file.");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setUploadingId(null);
+    }
+  };
+
   // Filter documents by the student's highest qualification.
   const visibleDocuments = useMemo(() => {
     const rank = profile?.highestQualification
@@ -182,8 +216,10 @@ export default function DocumentsPage() {
                   <DocumentRow
                     key={doc.id}
                     doc={doc}
+                    mandatory={MANDATORY_DOCS.has(doc.name)}
                     uploading={uploadingId === doc.id}
                     onUpload={upload}
+                    onDelete={deleteDoc}
                   />
                 ))}
               </div>
@@ -197,12 +233,16 @@ export default function DocumentsPage() {
 
 function DocumentRow({
   doc,
+  mandatory,
   uploading,
   onUpload,
+  onDelete,
 }: {
   doc: StudentDocument;
+  mandatory: boolean;
   uploading: boolean;
   onUpload: (documentId: string, file: File) => void;
+  onDelete: (documentId: string, fileName?: string) => void;
 }) {
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -242,27 +282,51 @@ function DocumentRow({
             </p>
           )}
         </div>
-        {hasFile && (
-          <CheckCircle2
-            className="h-4 w-4 shrink-0 text-green-600"
-            aria-label="Uploaded"
-          />
-        )}
+        {/* Only two states: Uploaded (file present) or Required (mandatory). */}
+        {hasFile ? (
+          <span className="flex shrink-0 items-center gap-1 rounded-full bg-green-100 px-2.5 py-1 text-[11px] font-semibold text-green-700">
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            Uploaded
+          </span>
+        ) : mandatory ? (
+          <span className="shrink-0 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold text-amber-700">
+            Required
+          </span>
+        ) : null}
       </div>
 
-      <button
-        type="button"
-        disabled={uploading}
-        onClick={() => inputRef.current?.click()}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[var(--color-border)] px-3 py-2.5 text-xs font-medium text-[var(--color-foreground-muted)] hover:border-[var(--color-accent)] hover:text-[var(--color-primary)] disabled:opacity-60 transition-colors"
-      >
-        <UploadCloud className="h-4 w-4" />
-        {uploading
-          ? "Uploading…"
-          : hasFile
-            ? "Replace file"
-            : "Drag & drop or click to upload"}
-      </button>
+      {hasFile ? (
+        <div className="mt-3 flex gap-2">
+          <button
+            type="button"
+            disabled={uploading}
+            onClick={() => inputRef.current?.click()}
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] px-3 py-2 text-xs font-medium text-[var(--color-foreground-muted)] hover:border-[var(--color-accent)] hover:text-[var(--color-primary)] disabled:opacity-60 transition-colors"
+          >
+            <UploadCloud className="h-4 w-4" />
+            {uploading ? "Uploading…" : "Replace file"}
+          </button>
+          <button
+            type="button"
+            disabled={uploading}
+            onClick={() => onDelete(doc.id, doc.fileName)}
+            className="flex items-center justify-center gap-1.5 rounded-lg border border-red-200 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-60 transition-colors"
+          >
+            <Trash2 className="h-4 w-4" />
+            Delete
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          disabled={uploading}
+          onClick={() => inputRef.current?.click()}
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-[var(--color-border)] px-3 py-2.5 text-xs font-medium text-[var(--color-foreground-muted)] hover:border-[var(--color-accent)] hover:text-[var(--color-primary)] disabled:opacity-60 transition-colors"
+        >
+          <UploadCloud className="h-4 w-4" />
+          {uploading ? "Uploading…" : "Drag & drop or click to upload"}
+        </button>
+      )}
       <input
         ref={inputRef}
         type="file"
