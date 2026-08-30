@@ -10,9 +10,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff, GraduationCap, Shield } from "lucide-react";
 import OtpVerifier from "@/components/auth/OtpVerifier";
+import { useNavLoading } from "@/components/loading/NavLoadingProvider";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { start: startNav } = useNavLoading();
   const [step, setStep] = useState<"credentials" | "otp">("credentials");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,6 +67,7 @@ export default function LoginPage() {
         setOtpError(data.error ?? "Verification failed.");
         return;
       }
+      startNav();
       router.push(data.redirect ?? "/dashboard");
     } catch {
       setOtpError("Network error. Please try again.");

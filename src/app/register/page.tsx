@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import OtpVerifier from "@/components/auth/OtpVerifier";
 import { trackEvent } from "@/lib/analytics";
+import { useNavLoading } from "@/components/loading/NavLoadingProvider";
 import {
   validateRegistration,
   hasErrors,
@@ -35,6 +36,7 @@ interface RegisterForm {
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { start: startNav } = useNavLoading();
   const [step, setStep] = useState<"details" | "otp">("details");
   const [form, setForm] = useState<RegisterForm>({
     firstName: "",
@@ -132,11 +134,11 @@ export default function RegisterPage() {
         { method: "email" },
         { metaStandardEvent: "CompleteRegistration" },
       );
+      startNav();
       router.push(data.redirect ?? "/onboarding");
     } catch {
       setOtpError("Network error. Please try again.");
-    } finally {
-      setSubmitting(false);
+    } finally {      setSubmitting(false);
     }
   };
 

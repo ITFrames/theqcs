@@ -45,27 +45,6 @@ const values = [
   },
 ];
 
-const team = [
-  {
-    name: "Dr. Sarah Mitchell",
-    role: "Founder & Lead Counselor",
-    description:
-      "With over 15 years of experience in international education, Sarah has guided hundreds of students to top universities worldwide.",
-  },
-  {
-    name: "James Chen",
-    role: "Senior Admissions Advisor",
-    description:
-      "Specializing in Canadian and UK universities, James brings insider knowledge from his experience in university admissions offices.",
-  },
-  {
-    name: "Priya Sharma",
-    role: "Visa & Immigration Specialist",
-    description:
-      "A certified immigration consultant with expertise in student visas across multiple countries including Canada, Australia, and the UK.",
-  },
-];
-
 const stats = [
   { value: "500+", label: "Students Guided", icon: GraduationCap },
   { value: "15+", label: "Destination Countries", icon: Globe },
@@ -245,53 +224,6 @@ export default function AboutPage() {
                 <p className="mt-2 text-sm text-[var(--color-foreground-muted)] leading-relaxed">
                   {value.description}
                 </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="section-padding">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-[var(--color-accent)]">
-              Our Team
-            </h2>
-            <h3 className="mt-3 text-3xl font-bold text-[var(--color-primary)]">
-              Meet the Experts
-            </h3>
-            <p className="mt-4 max-w-2xl mx-auto text-[var(--color-foreground-muted)]">
-              Our dedicated team of professionals is committed to helping you
-              succeed on your international education journey.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {team.map((member) => (
-              <div
-                key={member.name}
-                className="group rounded-xl bg-white border border-[var(--color-border-light)] p-6 shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-lg)] transition-all duration-300 hover:-translate-y-1"
-              >
-                <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-light)] flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">
-                    {member.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </span>
-                </div>
-                <div className="mt-5 text-center">
-                  <h4 className="text-lg font-semibold text-[var(--color-primary)]">
-                    {member.name}
-                  </h4>
-                  <p className="mt-1 text-sm font-medium text-[var(--color-accent)]">
-                    {member.role}
-                  </p>
-                  <p className="mt-3 text-sm text-[var(--color-foreground-muted)] leading-relaxed">
-                    {member.description}
-                  </p>
-                </div>
               </div>
             ))}
           </div>

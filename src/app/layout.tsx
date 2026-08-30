@@ -6,6 +6,7 @@ import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import ConsentBanner from "@/components/consent/ConsentBanner";
 import ConsentedAnalytics from "@/components/consent/ConsentedAnalytics";
+import { NavLoadingProvider } from "@/components/loading/NavLoadingProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -39,12 +40,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         suppressHydrationWarning
       >
         <ConsentProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <FloatingWhatsApp />
-          <ConsentBanner />
-          <ConsentedAnalytics />
+          <NavLoadingProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <FloatingWhatsApp />
+            <ConsentBanner />
+            <ConsentedAnalytics />
+          </NavLoadingProvider>
         </ConsentProvider>
       </body>
     </html>
