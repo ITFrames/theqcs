@@ -68,7 +68,7 @@ export default function DashboardShell({
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-primary)]">
               <GraduationCap className="h-5 w-5 text-white" />
             </span>
-            <span className="text-lg font-bold text-gradient">QCS ABROAD</span>
+            <span className="text-gradient text-lg font-bold">QCS ABROAD</span>
           </Link>
 
           <NavItems isActive={isActive} onNavigate={() => setOpen(false)} />
@@ -91,7 +91,7 @@ export default function DashboardShell({
             <button
               type="button"
               onClick={logout}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[var(--color-foreground-muted)] hover:bg-red-50 hover:text-red-600 transition-colors"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[var(--color-foreground-muted)] transition-colors hover:bg-red-50 hover:text-red-600"
             >
               <LogOut className="h-4.5 w-4.5" />
               Sign out

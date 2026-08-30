@@ -10,7 +10,7 @@ const sections = [
   {
     title: "1. Acceptance of Terms",
     body: [
-      "QCS ABROAD is operated by its parent company, 13115984 Canada Inc. References to \"QCS ABROAD,\" \"we,\" \"us,\" or \"our\" in these Terms refer to 13115984 Canada Inc. and its brand QCS ABROAD.",
+      'QCS ABROAD is operated by its parent company, 13115984 Canada Inc. References to "QCS ABROAD," "we," "us," or "our" in these Terms refer to 13115984 Canada Inc. and its brand QCS ABROAD.',
       "By accessing or using the QCS ABROAD website and services, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, please do not use our services.",
     ],
   },
@@ -84,9 +84,9 @@ export default function TermsPage() {
   return (
     <>
       {/* Header */}
-      <section className="bg-primary text-white section-padding">
+      <section className="bg-primary section-padding text-white">
         <div className="container-narrow text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="mb-4 text-4xl font-bold md:text-5xl">
             Terms of Service
           </h1>
           <p className="text-white/80">Last updated: August 28, 2026</p>
@@ -96,7 +96,7 @@ export default function TermsPage() {
       {/* Content */}
       <section className="section-padding">
         <div className="container-narrow max-w-3xl">
-          <p className="text-foreground-muted leading-relaxed mb-10">
+          <p className="text-foreground-muted mb-10 leading-relaxed">
             Please read these Terms of Service carefully before using the QCS
             ABROAD website and services. These terms govern your relationship
             with QCS ABROAD.
@@ -105,13 +105,13 @@ export default function TermsPage() {
           <div className="space-y-10">
             {sections.map((section) => (
               <div key={section.title}>
-                <h2 className="text-xl md:text-2xl font-bold text-primary mb-3">
+                <h2 className="text-primary mb-3 text-xl font-bold md:text-2xl">
                   {section.title}
                 </h2>
                 {section.body.map((para, i) => (
                   <p
                     key={i}
-                    className="text-foreground-muted leading-relaxed mb-3"
+                    className="text-foreground-muted mb-3 leading-relaxed"
                   >
                     {para}
                   </p>

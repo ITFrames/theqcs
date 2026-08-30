@@ -20,7 +20,7 @@ export function LabeledField({
     <div>
       <label
         htmlFor={htmlFor}
-        className="block text-sm font-medium text-[var(--color-foreground)] mb-1.5"
+        className="mb-1.5 block text-sm font-medium text-[var(--color-foreground)]"
       >
         {label}
         {optional && (
@@ -34,9 +34,7 @@ export function LabeledField({
   );
 }
 
-export function TextInput(
-  props: React.InputHTMLAttributes<HTMLInputElement>,
-) {
+export function TextInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return <input {...props} className={fieldInputClass} />;
 }
 

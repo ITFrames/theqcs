@@ -109,15 +109,21 @@ export default function ServicesContent() {
       {/* ===== Hero ===== */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#0f2440] via-[#1e3a5f] to-[#152a45] text-white">
         {/* decorative shapes */}
-        <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-[var(--color-accent)]/10 blur-3xl" aria-hidden="true" />
-        <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-white/5 blur-3xl" aria-hidden="true" />
+        <div
+          className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-[var(--color-accent)]/10 blur-3xl"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-white/5 blur-3xl"
+          aria-hidden="true"
+        />
 
-        <div className="container-narrow relative z-10 py-20 md:py-28 text-center">
+        <div className="container-narrow relative z-10 py-20 text-center md:py-28">
           <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-[var(--color-accent)] backdrop-blur-sm">
             <Sparkles className="h-4 w-4" aria-hidden="true" />
             End-to-End Student Support
           </span>
-          <h1 className="mt-6 text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+          <h1 className="mt-6 text-4xl leading-tight font-bold md:text-5xl lg:text-6xl">
             Our Services
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-white/75">
@@ -125,11 +131,14 @@ export default function ServicesContent() {
             abroad journey — from choosing the right university to settling into
             your new home.
           </p>
-          <div className="mt-9 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="mt-9 flex flex-col justify-center gap-4 sm:flex-row">
             <Link href="/contact" className="btn btn-accent px-7 py-3">
               Book a Free Consultation <ArrowRight className="h-4 w-4" />
             </Link>
-            <a href="#services-list" className="btn btn-outline-light px-7 py-3">
+            <a
+              href="#services-list"
+              className="btn btn-outline-light px-7 py-3"
+            >
               Explore Services
             </a>
           </div>
@@ -145,11 +154,11 @@ export default function ServicesContent() {
               return (
                 <article
                   key={service.title}
-                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-border-light bg-white p-7 shadow-[var(--shadow-sm)] transition-all duration-300 hover:shadow-[var(--shadow-xl)] hover:-translate-y-1"
+                  className="group border-border-light relative flex flex-col overflow-hidden rounded-2xl border bg-white p-7 shadow-[var(--shadow-sm)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-xl)]"
                 >
                   {/* big faint step number */}
                   <span
-                    className="pointer-events-none absolute -right-2 -top-4 text-7xl font-black text-primary/[0.05] select-none"
+                    className="text-primary/[0.05] pointer-events-none absolute -top-4 -right-2 text-7xl font-black select-none"
                     aria-hidden="true"
                   >
                     {service.step}
@@ -166,34 +175,43 @@ export default function ServicesContent() {
                     <Icon className="h-7 w-7" aria-hidden="true" />
                   </div>
 
-                  <span className="mb-1 block text-xs font-bold uppercase tracking-widest text-[var(--color-accent)]">
+                  <span className="mb-1 block text-xs font-bold tracking-widest text-[var(--color-accent)] uppercase">
                     Step {service.step}
                   </span>
-                  <h2 className="text-xl font-bold text-primary">
+                  <h2 className="text-primary text-xl font-bold">
                     {service.title}
                   </h2>
-                  <p className="mt-3 text-sm leading-relaxed text-foreground-muted">
+                  <p className="text-foreground-muted mt-3 text-sm leading-relaxed">
                     {service.description}
                   </p>
 
                   {/* features */}
                   <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
                     {service.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-2 text-sm text-foreground-muted">
-                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                      <li
+                        key={feature}
+                        className="text-foreground-muted flex items-start gap-2 text-sm"
+                      >
+                        <CheckCircle
+                          className="text-accent mt-0.5 h-4 w-4 shrink-0"
+                          aria-hidden="true"
+                        />
                         <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
 
                   {/* footer link */}
-                  <div className="mt-auto pt-5 border-t border-border-light">
+                  <div className="border-border-light mt-auto border-t pt-5">
                     <Link
                       href="/contact"
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors group-hover:text-accent-dark"
+                      className="text-primary group-hover:text-accent-dark inline-flex items-center gap-1.5 text-sm font-semibold transition-colors"
                     >
                       Get Started
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                      <ArrowRight
+                        className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                        aria-hidden="true"
+                      />
                     </Link>
                   </div>
                 </article>
@@ -206,21 +224,18 @@ export default function ServicesContent() {
       {/* ===== Bottom CTA ===== */}
       <section className="section-padding bg-primary text-white">
         <div className="container-narrow text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
             Ready to Begin Your Journey?
           </h2>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-white/80">
             Take the first step towards your international education dream. Our
             expert counselors are here to guide you every step of the way.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link href="/contact" className="btn btn-accent px-7 py-3">
               Book a Free Consultation <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link
-              href="/about"
-              className="btn btn-outline-light px-7 py-3"
-            >
+            <Link href="/about" className="btn btn-outline-light px-7 py-3">
               Learn About Us
             </Link>
           </div>

@@ -58,9 +58,7 @@ export default function Header() {
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-md"
-          : "bg-white"
+        scrolled ? "bg-white/95 shadow-md backdrop-blur-md" : "bg-white"
       }`}
     >
       <nav
@@ -70,7 +68,7 @@ export default function Header() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-3 group"
+          className="group flex items-center gap-3"
           onClick={closeMobileMenu}
         >
           <Image
@@ -97,7 +95,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-[var(--color-foreground-muted)] hover:text-[var(--color-primary)] transition-colors duration-200 relative after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-[var(--color-accent)] after:transition-all after:duration-300 hover:after:w-full"
+              className="relative text-sm font-medium text-[var(--color-foreground-muted)] transition-colors duration-200 after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:w-0 after:bg-[var(--color-accent)] after:transition-all after:duration-300 hover:text-[var(--color-primary)] hover:after:w-full"
             >
               {link.label}
             </Link>
@@ -106,14 +104,14 @@ export default function Header() {
             <>
               <Link
                 href="/dashboard"
-                className="text-sm font-medium text-[var(--color-foreground-muted)] hover:text-[var(--color-primary)] transition-colors duration-200"
+                className="text-sm font-medium text-[var(--color-foreground-muted)] transition-colors duration-200 hover:text-[var(--color-primary)]"
               >
                 Dashboard
               </Link>
               <button
                 type="button"
                 onClick={logout}
-                className="btn btn-primary ml-2 text-sm px-5 py-2"
+                className="btn btn-primary ml-2 px-5 py-2 text-sm"
               >
                 Sign out
               </button>
@@ -123,13 +121,13 @@ export default function Header() {
             <>
               <Link
                 href="/register"
-                className="text-sm font-medium text-[var(--color-foreground-muted)] hover:text-[var(--color-primary)] transition-colors duration-200"
+                className="text-sm font-medium text-[var(--color-foreground-muted)] transition-colors duration-200 hover:text-[var(--color-primary)]"
               >
                 Register
               </Link>
               <Link
                 href="/login"
-                className="btn btn-primary ml-2 text-sm px-5 py-2"
+                className="btn btn-primary ml-2 px-5 py-2 text-sm"
               >
                 Login
               </Link>
@@ -140,7 +138,7 @@ export default function Header() {
         {/* Mobile Menu Button */}
         <button
           type="button"
-          className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-[var(--color-foreground-muted)] hover:text-[var(--color-primary)] hover:bg-[var(--color-background-muted)] transition-colors"
+          className="inline-flex items-center justify-center rounded-md p-2 text-[var(--color-foreground-muted)] transition-colors hover:bg-[var(--color-background-muted)] hover:text-[var(--color-primary)] md:hidden"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-expanded={mobileMenuOpen}
           aria-controls="mobile-menu"
@@ -157,24 +155,24 @@ export default function Header() {
       {/* Mobile Menu */}
       <div
         id="mobile-menu"
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`overflow-hidden transition-all duration-300 ease-in-out md:hidden ${
           mobileMenuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
         }`}
         role="navigation"
         aria-label="Mobile navigation"
       >
-        <div className="border-t border-[var(--color-border-light)] bg-white px-6 pb-6 pt-4 space-y-1">
+        <div className="space-y-1 border-t border-[var(--color-border-light)] bg-white px-6 pt-4 pb-6">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="block rounded-lg px-4 py-3 text-sm font-medium text-[var(--color-foreground-muted)] hover:bg-[var(--color-background-muted)] hover:text-[var(--color-primary)] transition-colors"
+              className="block rounded-lg px-4 py-3 text-sm font-medium text-[var(--color-foreground-muted)] transition-colors hover:bg-[var(--color-background-muted)] hover:text-[var(--color-primary)]"
               onClick={closeMobileMenu}
             >
               {link.label}
             </Link>
           ))}
-          <div className="pt-3 space-y-2">
+          <div className="space-y-2 pt-3">
             {authed === true && (
               <>
                 <Link

@@ -15,10 +15,10 @@ export default function FloatingWhatsApp() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"
-      className="group fixed bottom-5 right-5 z-[60] flex items-center gap-3 md:bottom-6 md:right-6"
+      className="group fixed right-5 bottom-5 z-[60] flex items-center gap-3 md:right-6 md:bottom-6"
     >
       {/* Tooltip / label (desktop) */}
-      <span className="hidden rounded-full bg-white px-3 py-2 text-sm font-medium text-[var(--color-primary)] shadow-lg opacity-0 transition-opacity duration-200 group-hover:opacity-100 md:block">
+      <span className="hidden rounded-full bg-white px-3 py-2 text-sm font-medium text-[var(--color-primary)] opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 md:block">
         Chat with us
       </span>
 

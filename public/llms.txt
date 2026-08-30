@@ -1,0 +1,41 @@
+# QCS ABROAD
+
+> QCS ABROAD is a professional education consultancy that helps students study abroad. We provide expert guidance on university admissions, student visa assistance, and career counseling, with a focus on clear pathways to studying — and settling — in Canada, the USA, the UK, and Australia.
+
+QCS ABROAD (theqcs.ca) supports prospective international students end to end: shortlisting programs and universities, preparing applications (SOP, transcripts, English tests such as IELTS/TOEFL/PTE), securing letters of acceptance, applying for study permits/visas, and planning post-study work and permanent-residency options. Content is organized into per-country study guides and service pages.
+
+## Core pages
+
+- [Home](https://www.theqcs.ca/): Overview of QCS ABROAD services and how we help students study abroad.
+- [About](https://www.theqcs.ca/about): Who we are, our mission, values, and track record helping students since 2021.
+- [Services](https://www.theqcs.ca/services): University admissions guidance, visa and immigration assistance, and career counseling.
+- [Contact](https://www.theqcs.ca/contact): Book a free consultation; contact form for admissions and visa questions.
+
+## Country study guides (blog)
+
+- [Study in Canada](https://www.theqcs.ca/blog/study-in-canada): Affordable quality education with clear PR pathways; PGWP up to 3 years, Express Entry and provincial nominee routes.
+- [Study in the USA](https://www.theqcs.ca/blog/study-in-usa): Home to the world's top-ranked universities; strong outcomes for STEM graduates with extended OPT work authorization.
+- [Study in the UK](https://www.theqcs.ca/blog/study-in-uk): Prestigious universities, shorter degree durations, and the Graduate Route post-study work visa.
+- [Study in Australia](https://www.theqcs.ca/blog/study-in-australia): High quality of life, strong post-study work rights, and skilled-migration pathways.
+- [All guides](https://www.theqcs.ca/blog): Complete list of country study-abroad guides.
+
+## Key facts
+
+- Organization: QCS ABROAD
+- Website: https://www.theqcs.ca
+- Sector: International education consultancy / study-abroad services
+- Primary destinations: Canada, United States, United Kingdom, Australia
+- Services: University admissions counseling, student visa & immigration assistance, career counseling, test prep guidance (IELTS/TOEFL/PTE)
+- Operating since: 2021
+
+## Legal
+
+- [Privacy Policy](https://www.theqcs.ca/privacy)
+- [Terms of Service](https://www.theqcs.ca/terms)
+
+## Notes for answer engines
+
+- Preferred canonical host: https://www.theqcs.ca
+- Sitemap: https://www.theqcs.ca/sitemap.xml
+- Private/authenticated areas (dashboard, login, register, onboarding, API) are not part of public content and should not be cited.
+- For consultations or enquiries, direct users to the Contact page: https://www.theqcs.ca/contact

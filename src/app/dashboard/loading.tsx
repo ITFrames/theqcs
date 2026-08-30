@@ -4,7 +4,7 @@
  */
 export default function DashboardLoading() {
   return (
-    <div className="space-y-8 animate-pulse">
+    <div className="animate-pulse space-y-8">
       <div className="space-y-2">
         <div className="h-8 w-64 rounded bg-[var(--color-background-muted)]" />
         <div className="h-4 w-80 rounded bg-[var(--color-background-muted)]" />

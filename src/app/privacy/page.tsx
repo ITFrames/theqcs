@@ -110,9 +110,9 @@ export default function PrivacyPage() {
   return (
     <>
       {/* Header */}
-      <section className="bg-primary text-white section-padding">
+      <section className="bg-primary section-padding text-white">
         <div className="container-narrow text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="mb-4 text-4xl font-bold md:text-5xl">
             Privacy Policy
           </h1>
           <p className="text-white/80">Last updated: August 28, 2026</p>
@@ -122,7 +122,7 @@ export default function PrivacyPage() {
       {/* Content */}
       <section className="section-padding">
         <div className="container-narrow max-w-3xl">
-          <p className="text-foreground-muted leading-relaxed mb-10">
+          <p className="text-foreground-muted mb-10 leading-relaxed">
             At QCS ABROAD, we are committed to protecting your privacy. This
             Privacy Policy explains how we collect, use, disclose, and safeguard
             your information when you visit our website or use our services.
@@ -131,25 +131,28 @@ export default function PrivacyPage() {
           <div className="space-y-10">
             {sections.map((section) => (
               <div key={section.title}>
-                <h2 className="text-xl md:text-2xl font-bold text-primary mb-3">
+                <h2 className="text-primary mb-3 text-xl font-bold md:text-2xl">
                   {section.title}
                 </h2>
                 {section.body.map((para, i) => (
                   <p
                     key={i}
-                    className="text-foreground-muted leading-relaxed mb-3"
+                    className="text-foreground-muted mb-3 leading-relaxed"
                   >
                     {para}
                   </p>
                 ))}
                 {"bullets" in section && section.bullets && (
-                  <ul className="mb-3 mt-1 space-y-2">
+                  <ul className="mt-1 mb-3 space-y-2">
                     {section.bullets.map((b) => (
                       <li
                         key={b}
-                        className="flex items-start gap-3 text-foreground-muted leading-relaxed"
+                        className="text-foreground-muted flex items-start gap-3 leading-relaxed"
                       >
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent)]" aria-hidden="true" />
+                        <span
+                          className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-accent)]"
+                          aria-hidden="true"
+                        />
                         <span>{b}</span>
                       </li>
                     ))}

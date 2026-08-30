@@ -285,7 +285,6 @@ export const db: DataStore = isSupabaseConfigured
   ? resolveStore()
   : memoryStore;
 
-
 /** Static catalog for the Program Explorer. */
 export const PROGRAM_CATALOG: Program[] = [
   {

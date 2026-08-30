@@ -61,7 +61,9 @@ export async function createSignedUpload(
     .createSignedUploadUrl(path, { upsert: true });
 
   if (error || !data) {
-    throw new Error(`createSignedUpload failed: ${error?.message ?? "unknown"}`);
+    throw new Error(
+      `createSignedUpload failed: ${error?.message ?? "unknown"}`,
+    );
   }
   return { path: data.path, token: data.token };
 }
@@ -70,6 +72,8 @@ export async function createSignedUpload(
 export async function deleteFile(path: string): Promise<void> {
   const supabase = sb();
   if (!supabase) return;
-  const { error } = await supabase.storage.from(DOCUMENTS_BUCKET).remove([path]);
+  const { error } = await supabase.storage
+    .from(DOCUMENTS_BUCKET)
+    .remove([path]);
   if (error) throw new Error(`deleteFile failed: ${error.message}`);
 }

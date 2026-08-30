@@ -54,7 +54,7 @@ export default async function DashboardPage() {
           </div>
           <Link
             href={nextAction.href}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--color-primary-light)] transition-all hover:shadow-md"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[var(--color-primary-light)] hover:shadow-md"
           >
             Continue My Journey
             <ArrowRight className="h-4 w-4" />
@@ -109,7 +109,7 @@ export default async function DashboardPage() {
         className="overflow-hidden rounded-2xl border border-[var(--color-accent)]/40 bg-gradient-to-br from-[#fdf8ef] to-white p-6 sm:p-7"
         style={{ boxShadow: "var(--shadow-md)" }}
       >
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-dark)]">
+        <p className="text-xs font-semibold tracking-wide text-[var(--color-accent-dark)] uppercase">
           Your Next Step
         </p>
         <h2 className="mt-2 text-xl font-bold text-[var(--color-foreground)]">
@@ -120,7 +120,7 @@ export default async function DashboardPage() {
         </p>
         <Link
           href={nextAction.href}
-          className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[var(--color-primary-dark)] hover:bg-[var(--color-accent-light)] transition-all hover:shadow-md"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[var(--color-primary-dark)] transition-all hover:bg-[var(--color-accent-light)] hover:shadow-md"
         >
           {nextAction.cta}
           <ArrowRight className="h-4 w-4" />

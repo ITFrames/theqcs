@@ -96,8 +96,8 @@ export default function OtpVerifier({
   return (
     <div className="space-y-5">
       <div className="text-center">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[var(--color-background-muted)] mb-3">
-          <ShieldCheck className="w-6 h-6 text-[var(--color-primary)]" />
+        <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-background-muted)]">
+          <ShieldCheck className="h-6 w-6 text-[var(--color-primary)]" />
         </div>
         <h2 className="text-lg font-semibold text-[var(--color-foreground)]">
           Enter verification code
@@ -131,7 +131,7 @@ export default function OtpVerifier({
             onChange={(e) => setDigit(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             aria-label={`Digit ${i + 1}`}
-            className="w-11 h-13 sm:w-12 sm:h-14 text-center text-lg font-semibold rounded-lg border border-[var(--color-border)] bg-white text-[var(--color-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] transition-all"
+            className="h-13 w-11 rounded-lg border border-[var(--color-border)] bg-white text-center text-lg font-semibold text-[var(--color-foreground)] transition-all focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)] focus:outline-none sm:h-14 sm:w-12"
           />
         ))}
       </div>
@@ -159,7 +159,7 @@ export default function OtpVerifier({
         type="button"
         disabled={submitting || code.length !== 6}
         onClick={() => onVerify(code)}
-        className="w-full py-2.5 px-4 text-sm font-semibold text-white rounded-lg bg-[var(--color-primary)] hover:bg-[var(--color-primary-light)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+        className="w-full rounded-lg bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[var(--color-primary-light)] focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
       >
         {submitting ? "Verifying…" : "Verify & Continue"}
       </button>
@@ -171,9 +171,9 @@ export default function OtpVerifier({
           setDigits(["", "", "", "", "", ""]);
           onResend();
         }}
-        className="w-full inline-flex items-center justify-center gap-2 text-sm font-medium text-[var(--color-accent-dark)] hover:text-[var(--color-accent)] disabled:text-[var(--color-foreground-subtle)] disabled:cursor-not-allowed transition-colors"
+        className="inline-flex w-full items-center justify-center gap-2 text-sm font-medium text-[var(--color-accent-dark)] transition-colors hover:text-[var(--color-accent)] disabled:cursor-not-allowed disabled:text-[var(--color-foreground-subtle)]"
       >
-        <RefreshCw className="w-3.5 h-3.5" />
+        <RefreshCw className="h-3.5 w-3.5" />
         {expired ? "Resend code" : "Resend available after expiry"}
       </button>
     </div>

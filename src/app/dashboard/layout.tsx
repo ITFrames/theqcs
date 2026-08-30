@@ -15,7 +15,5 @@ export default async function DashboardLayout({
   // Nudge students who registered but never finished onboarding.
   if (!profile?.onboardingComplete) redirect("/onboarding");
 
-  return (
-    <DashboardShell user={toPublicUser(user)}>{children}</DashboardShell>
-  );
+  return <DashboardShell user={toPublicUser(user)}>{children}</DashboardShell>;
 }

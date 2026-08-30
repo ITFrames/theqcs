@@ -12,10 +12,15 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 },
+    );
   }
 
-  const email = String(body.email ?? "").trim().toLowerCase();
+  const email = String(body.email ?? "")
+    .trim()
+    .toLowerCase();
   const purpose = body.purpose === "login" ? "login" : "register";
 
   if (!email) {
@@ -40,7 +45,8 @@ export async function POST(request: Request) {
   });
 
   const delivery = await sendOtpEmail(email, code, purpose);
-  const exposeCode = delivery.devFallback && process.env.NODE_ENV !== "production";
+  const exposeCode =
+    delivery.devFallback && process.env.NODE_ENV !== "production";
 
   if (delivery.error) {
     return NextResponse.json(

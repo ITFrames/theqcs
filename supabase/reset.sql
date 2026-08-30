@@ -3,6 +3,7 @@
 -- child rows. This does NOT drop tables — the schema stays intact.
 
 truncate table
+  sessions,
   shortlist,
   documents,
   applications,

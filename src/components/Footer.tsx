@@ -29,11 +29,27 @@ const services = [
 ];
 
 const socialLinks = [
-  { href: "https://www.facebook.com/qcsabroad", label: "Facebook", icon: Facebook },
-  { href: "https://www.instagram.com/qcsabroad", label: "Instagram", icon: Instagram },
-  { href: "https://www.linkedin.com/company/qcsabroad", label: "LinkedIn", icon: Linkedin },
+  {
+    href: "https://www.facebook.com/qcsabroad",
+    label: "Facebook",
+    icon: Facebook,
+  },
+  {
+    href: "https://www.instagram.com/qcsabroad",
+    label: "Instagram",
+    icon: Instagram,
+  },
+  {
+    href: "https://www.linkedin.com/company/qcsabroad",
+    label: "LinkedIn",
+    icon: Linkedin,
+  },
   { href: "https://x.com/qcsabroad", label: "X (Twitter)", icon: Twitter },
-  { href: "https://wa.me/16478903806?text=Hi+QCS+ABROAD%21+%F0%9F%91%8B%0A%0AI%27m+interested+in+studying+abroad+and+would+like+guidance+with+my+application.%0A%0A%F0%9F%8C%8D+Preferred+Country%3A%0A%F0%9F%8E%93+Program+%2F+Course%3A%0A%F0%9F%93%9A+Current+Qualification%3A%0A%F0%9F%93%85+Preferred+Intake%3A%0A%0APlease+help+me+understand+my+study+options+and+the+next+steps.%0A%0AThank+you%21", label: "WhatsApp", icon: MessageCircle },
+  {
+    href: "https://wa.me/16478903806?text=Hi+QCS+ABROAD%21+%F0%9F%91%8B%0A%0AI%27m+interested+in+studying+abroad+and+would+like+guidance+with+my+application.%0A%0A%F0%9F%8C%8D+Preferred+Country%3A%0A%F0%9F%8E%93+Program+%2F+Course%3A%0A%F0%9F%93%9A+Current+Qualification%3A%0A%F0%9F%93%85+Preferred+Intake%3A%0A%0APlease+help+me+understand+my+study+options+and+the+next+steps.%0A%0AThank+you%21",
+    label: "WhatsApp",
+    icon: MessageCircle,
+  },
 ];
 
 export default function Footer() {
@@ -72,7 +88,7 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/80 hover:bg-[var(--color-accent)] hover:text-[var(--color-primary-dark)] transition-all duration-200"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/80 transition-all duration-200 hover:bg-[var(--color-accent)] hover:text-[var(--color-primary-dark)]"
                     aria-label={social.label}
                   >
                     <Icon className="h-4 w-4" aria-hidden="true" />
@@ -84,7 +100,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+            <h3 className="text-sm font-semibold tracking-wider text-[var(--color-accent)] uppercase">
               Quick Links
             </h3>
             <ul className="mt-4 space-y-3">
@@ -92,7 +108,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/70 hover:text-white transition-colors duration-200"
+                    className="text-sm text-white/70 transition-colors duration-200 hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -103,7 +119,7 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+            <h3 className="text-sm font-semibold tracking-wider text-[var(--color-accent)] uppercase">
               Our Services
             </h3>
             <ul className="mt-4 space-y-3">
@@ -111,7 +127,7 @@ export default function Footer() {
                 <li key={service.label}>
                   <Link
                     href={service.href}
-                    className="text-sm text-white/70 hover:text-white transition-colors duration-200"
+                    className="text-sm text-white/70 transition-colors duration-200 hover:text-white"
                   >
                     {service.label}
                   </Link>
@@ -122,14 +138,14 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+            <h3 className="text-sm font-semibold tracking-wider text-[var(--color-accent)] uppercase">
               Contact Us
             </h3>
             <ul className="mt-4 space-y-3">
               <li>
                 <a
                   href="mailto:contact@theqcs.ca"
-                  className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors duration-200"
+                  className="flex items-center gap-2 text-sm text-white/70 transition-colors duration-200 hover:text-white"
                 >
                   <Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
                   contact@theqcs.ca
@@ -137,7 +153,10 @@ export default function Footer() {
               </li>
               <li>
                 <span className="flex items-start gap-2 text-sm text-white/70">
-                  <MapPin className="h-4 w-4 shrink-0 mt-0.5" aria-hidden="true" />
+                  <MapPin
+                    className="mt-0.5 h-4 w-4 shrink-0"
+                    aria-hidden="true"
+                  />
                   Toronto, Canada &middot; Hyderabad, India
                 </span>
               </li>
@@ -146,7 +165,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 border-t border-white/10 pt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+        <div className="mt-12 flex flex-col items-center gap-4 border-t border-white/10 pt-8 sm:flex-row sm:justify-between">
           <p className="text-xs text-white/50">
             &copy; 2026 QCS ABROAD, a brand of 13115984 Canada Inc. All rights
             reserved.
@@ -154,17 +173,17 @@ export default function Footer() {
           <div className="flex gap-6">
             <Link
               href="/privacy"
-              className="text-xs text-white/50 hover:text-white/80 transition-colors duration-200"
+              className="text-xs text-white/50 transition-colors duration-200 hover:text-white/80"
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms"
-              className="text-xs text-white/50 hover:text-white/80 transition-colors duration-200"
+              className="text-xs text-white/50 transition-colors duration-200 hover:text-white/80"
             >
               Terms of Service
             </Link>
-            <CookiePreferencesButton className="text-xs text-white/50 hover:text-white/80 transition-colors duration-200 cursor-pointer" />
+            <CookiePreferencesButton className="cursor-pointer text-xs text-white/50 transition-colors duration-200 hover:text-white/80" />
           </div>
         </div>
 
@@ -176,7 +195,7 @@ export default function Footer() {
               href="https://itframes.in"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-white/60 hover:text-[var(--color-accent)] transition-colors duration-200"
+              className="font-medium text-white/60 transition-colors duration-200 hover:text-[var(--color-accent)]"
             >
               itframes.in
             </a>

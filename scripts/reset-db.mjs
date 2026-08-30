@@ -19,7 +19,10 @@ import { createInterface } from "node:readline";
 // Minimal .env.local loader (no dependency).
 function loadEnv() {
   try {
-    const text = readFileSync(new URL("../.env.local", import.meta.url), "utf8");
+    const text = readFileSync(
+      new URL("../.env.local", import.meta.url),
+      "utf8",
+    );
     for (const line of text.split("\n")) {
       const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
       if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
@@ -44,6 +47,7 @@ if (!url || !key) {
 
 // Child tables first so foreign keys don't block deletes.
 const TABLES = [
+  "sessions",
   "shortlist",
   "documents",
   "applications",
@@ -68,8 +72,10 @@ async function confirm() {
 
 async function deleteAll(table) {
   // PostgREST requires a filter to delete; `id=not.is.null` matches every row.
-  // `otps` has no `id` column, so filter on its `email` primary-key component.
-  const filter = table === "otps" ? "email=not.is.null" : "id=not.is.null";
+  // Tables without an `id` column filter on a primary-key component instead.
+  let filter = "id=not.is.null";
+  if (table === "otps") filter = "email=not.is.null";
+  else if (table === "sessions") filter = "token=not.is.null";
   const res = await fetch(`${url}/rest/v1/${table}?${filter}`, {
     method: "DELETE",
     headers: {

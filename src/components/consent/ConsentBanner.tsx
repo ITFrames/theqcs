@@ -195,7 +195,7 @@ function CategoryRow({
           onChange={(e) => onChange?.(e.target.checked)}
         />
         <span
-          className={`h-6 w-11 rounded-full transition-colors after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-5 ${
+          className={`h-6 w-11 rounded-full transition-colors after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-5 ${
             locked
               ? "bg-[var(--color-accent)] opacity-70"
               : "bg-[var(--color-border)] peer-checked:bg-[var(--color-primary)]"

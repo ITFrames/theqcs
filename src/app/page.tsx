@@ -26,8 +26,8 @@ import Link from "next/link";
 import FlightRoutes from "@/components/FlightRoutes";
 import DestinationsGrid from "@/components/DestinationsGrid";
 import StudyMatcher from "@/components/StudyMatcher";
-import HeroImage from "@/components/HeroImage";
 import HeroBackground from "@/components/HeroBackground";
+import Image from "next/image";
 
 const stats = [
   { icon: Users, value: "500+", label: "Students Placed" },
@@ -85,7 +85,10 @@ const decisionFactors = [
   { icon: MapPin, text: "Your decision on Immigration priority" },
   { icon: GraduationCap, text: "Your decision on Higher studies" },
   { icon: Briefcase, text: "Your decision on Employment preferences" },
-  { icon: Wallet, text: "Your decision based on your current Financial Stability" },
+  {
+    icon: Wallet,
+    text: "Your decision based on your current Financial Stability",
+  },
   { icon: Compass, text: "Your decision based on your Future goals" },
 ];
 
@@ -179,9 +182,35 @@ const testimonials = [
 export default function Home() {
   return (
     <main>
+      {/* Hero + Stats share one continuous illustrated background */}
+      <div className="relative overflow-hidden bg-[#faf6ea]">
+        {/* Navy base band aligned with the illustration's bottom wave. */}
+        <div
+          className="absolute inset-x-0 bottom-0 z-0 h-40 bg-[var(--color-primary)] sm:h-44 lg:h-52"
+          aria-hidden="true"
+        />
+
+        {/* Hero illustration as a background layer spanning the whole block. */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          aria-hidden="true"
+        >
+          <Image
+            src="/hero-student.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-contain object-bottom opacity-70 sm:opacity-80 lg:object-right-bottom lg:opacity-100"
+          />
+          {/* Readability fade: top->bottom on mobile (text sits above the
+              student), left->right on desktop (text sits left of the student). */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#faf6ea] via-[#faf6ea]/85 to-transparent lg:bg-gradient-to-r lg:from-[#faf6ea] lg:via-[#faf6ea]/40 lg:to-transparent" />
+        </div>
+
       {/* Hero Section */}
       <section
-        className="relative overflow-hidden bg-gradient-to-br from-white via-[#f0f4f8] to-[#e8eef5]"
+        className="relative z-10"
         aria-labelledby="hero-heading"
       >
         {/* Decorative shapes */}
@@ -195,7 +224,7 @@ export default function Home() {
           aria-hidden="true"
         />
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full border border-[#1e3a5f]/[0.04]"
+          className="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#1e3a5f]/[0.04]"
           aria-hidden="true"
         />
         <div
@@ -206,21 +235,21 @@ export default function Home() {
         {/* Animated landmark background (floating icons + sliding marquee) */}
         <HeroBackground />
 
-        <div className="container-narrow relative z-10 py-20 md:py-28 lg:py-32">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            {/* Left: copy */}
+        <div className="container-narrow relative z-10 pt-12 pb-56 sm:pb-64 md:py-28 lg:py-32">
+          <div className="max-w-xl">
+            {/* Copy */}
             <div className="text-center lg:text-left">
-              <p className="hero-rise hero-delay-1 mb-4 inline-block overflow-hidden rounded-full border border-accent/20 bg-white/50 px-4 py-1.5 text-sm font-semibold uppercase tracking-widest text-accent backdrop-blur-sm badge-shimmer">
+              <p className="hero-rise hero-delay-1 border-accent/20 text-accent badge-shimmer mb-4 inline-block overflow-hidden rounded-full border bg-white/50 px-4 py-1.5 text-sm font-semibold tracking-widest uppercase backdrop-blur-sm">
                 Trusted Education Consultancy
               </p>
               <h1
                 id="hero-heading"
-                className="hero-rise hero-delay-2 text-4xl font-bold leading-tight tracking-tight text-primary md:text-5xl lg:text-6xl"
+                className="hero-rise hero-delay-2 text-primary text-4xl leading-tight font-bold tracking-tight md:text-5xl lg:text-6xl"
               >
                 Your Gateway to{" "}
                 <span className="text-gradient-animated">Global Education</span>
               </h1>
-              <p className="hero-rise hero-delay-3 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-foreground-muted md:text-xl lg:mx-0">
+              <p className="hero-rise hero-delay-3 text-foreground-muted mx-auto mt-6 max-w-xl text-lg leading-relaxed md:text-xl lg:mx-0">
                 QCS ABROAD helps students navigate their journey to world-class
                 universities. Expert guidance, personalized support, proven
                 results.
@@ -231,7 +260,10 @@ export default function Home() {
                   className="btn btn-primary group px-8 py-3 text-base"
                 >
                   Explore Services
-                  <ArrowRight className="h-4 w-4 cta-nudge" aria-hidden="true" />
+                  <ArrowRight
+                    className="cta-nudge h-4 w-4"
+                    aria-hidden="true"
+                  />
                 </a>
                 <a
                   href="/contact"
@@ -241,18 +273,13 @@ export default function Home() {
                 </a>
               </div>
             </div>
-
-            {/* Right: animated student photo */}
-            <div className="hero-rise hero-delay-3 hidden lg:block">
-              <HeroImage />
-            </div>
           </div>
         </div>
       </section>
 
       {/* Stats Bar */}
       <section
-        className="relative -mt-8 z-20 section-padding pt-0 pb-16"
+        className="relative z-20 -mt-8 bg-[var(--color-primary)] px-6 pt-8 pb-12 lg:bg-transparent lg:px-0 lg:pt-0 lg:pb-20"
         aria-label="Key statistics"
       >
         <div className="container-narrow">
@@ -260,18 +287,18 @@ export default function Home() {
             {stats.map((stat) => (
               <div
                 key={stat.label}
-                className="flex flex-col items-center gap-2 rounded-xl bg-white p-6 text-center shadow-[var(--shadow-lg)] border border-border-light"
+                className="border-border-light flex flex-col items-center gap-2 rounded-xl border bg-white p-6 text-center shadow-[var(--shadow-lg)]"
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1e3a5f]/[0.08]">
                   <stat.icon
-                    className="h-6 w-6 text-primary"
+                    className="text-primary h-6 w-6"
                     aria-hidden="true"
                   />
                 </div>
-                <p className="text-2xl font-bold text-primary md:text-3xl">
+                <p className="text-primary text-2xl font-bold md:text-3xl">
                   {stat.value}
                 </p>
-                <p className="text-sm font-medium text-foreground-muted">
+                <p className="text-foreground-muted text-sm font-medium">
                   {stat.label}
                 </p>
               </div>
@@ -279,6 +306,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </div>
+      {/* end shared hero + stats background */}
 
       {/* Animated Global Flight Network */}
       <FlightRoutes />
@@ -293,16 +322,16 @@ export default function Home() {
       >
         <div className="container-narrow">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-accent">
+            <p className="text-accent mb-2 text-sm font-semibold tracking-widest uppercase">
               What We Offer
             </p>
             <h2
               id="services-heading"
-              className="text-3xl font-bold text-primary md:text-4xl"
+              className="text-primary text-3xl font-bold md:text-4xl"
             >
               Comprehensive Student Services
             </h2>
-            <p className="mt-4 text-foreground-muted">
+            <p className="text-foreground-muted mt-4">
               From your first consultation to settling into your new city, we
               provide end-to-end support for every stage of your study abroad
               journey.
@@ -313,23 +342,23 @@ export default function Home() {
             {services.map((service) => (
               <article
                 key={service.title}
-                className="group flex flex-col rounded-xl border border-border-light bg-white p-6 shadow-[var(--shadow-sm)] transition-all duration-250 hover:shadow-[var(--shadow-lg)] hover:-translate-y-1"
+                className="group border-border-light flex flex-col rounded-xl border bg-white p-6 shadow-[var(--shadow-sm)] transition-all duration-250 hover:-translate-y-1 hover:shadow-[var(--shadow-lg)]"
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[#d4a853]/[0.12]">
                   <service.icon
-                    className="h-6 w-6 text-accent-dark"
+                    className="text-accent-dark h-6 w-6"
                     aria-hidden="true"
                   />
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-primary">
+                <h3 className="text-primary mb-2 text-lg font-semibold">
                   {service.title}
                 </h3>
-                <p className="mb-4 flex-1 text-sm leading-relaxed text-foreground-muted">
+                <p className="text-foreground-muted mb-4 flex-1 text-sm leading-relaxed">
                   {service.description}
                 </p>
                 <a
                   href={service.href}
-                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-accent-dark transition-colors"
+                  className="text-primary hover:text-accent-dark inline-flex items-center gap-1 text-sm font-medium transition-colors"
                 >
                   Learn More
                   <ArrowRight
@@ -350,16 +379,16 @@ export default function Home() {
       >
         <div className="container-narrow">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-accent">
+            <p className="text-accent mb-2 text-sm font-semibold tracking-widest uppercase">
               Why QCS ABROAD
             </p>
             <h2
               id="why-choose-heading"
-              className="text-3xl font-bold text-primary md:text-4xl"
+              className="text-primary text-3xl font-bold md:text-4xl"
             >
               Why Students Choose Us
             </h2>
-            <p className="mt-4 text-foreground-muted">
+            <p className="text-foreground-muted mt-4">
               We combine deep expertise with genuine care to deliver an
               experience that sets the standard in education consulting.
             </p>
@@ -368,13 +397,13 @@ export default function Home() {
           <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {differentiators.map((item) => (
               <div key={item.title} className="text-center">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white">
+                <div className="bg-primary mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full text-white">
                   <item.icon className="h-6 w-6" aria-hidden="true" />
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-primary">
+                <h3 className="text-primary mb-2 text-lg font-semibold">
                   {item.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-foreground-muted">
+                <p className="text-foreground-muted text-sm leading-relaxed">
                   {item.description}
                 </p>
               </div>
@@ -387,21 +416,24 @@ export default function Home() {
       <DestinationsGrid />
 
       {/* Decision factors */}
-      <section className="section-padding bg-white pt-0" aria-label="How we help you decide">
+      <section
+        className="section-padding bg-white pt-0"
+        aria-label="How we help you decide"
+      >
         <div className="container-narrow">
-          <div className="mx-auto max-w-3xl rounded-2xl bg-background-alt p-8 md:p-10">
-            <h3 className="text-center text-lg font-semibold text-primary">
+          <div className="bg-background-alt mx-auto max-w-3xl rounded-2xl p-8 md:p-10">
+            <h3 className="text-primary text-center text-lg font-semibold">
               We help you decide based on:
             </h3>
             <ul className="mt-6 grid gap-4 sm:grid-cols-2">
               {decisionFactors.map((factor) => (
                 <li
                   key={factor.text}
-                  className="flex items-start gap-3 text-sm text-foreground-muted"
+                  className="text-foreground-muted flex items-start gap-3 text-sm"
                 >
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#d4a853]/[0.12]">
                     <factor.icon
-                      className="h-4 w-4 text-accent-dark"
+                      className="text-accent-dark h-4 w-4"
                       aria-hidden="true"
                     />
                   </span>
@@ -426,16 +458,16 @@ export default function Home() {
       >
         <div className="container-narrow">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-accent">
+            <p className="text-accent mb-2 text-sm font-semibold tracking-widest uppercase">
               Study Abroad
             </p>
             <h2
               id="why-abroad-heading"
-              className="text-3xl font-bold text-primary md:text-4xl"
+              className="text-primary text-3xl font-bold md:text-4xl"
             >
               Why Study Abroad?
             </h2>
-            <p className="mt-4 text-foreground-muted">
+            <p className="text-foreground-muted mt-4">
               Studying abroad is more than earning a degree—it&apos;s a
               transformative experience that shapes your future in profound
               ways.
@@ -446,18 +478,18 @@ export default function Home() {
             {whyStudyAbroad.map((item) => (
               <article
                 key={item.title}
-                className="flex flex-col rounded-xl border border-border-light bg-white p-6 shadow-[var(--shadow-sm)] transition-all duration-250 hover:shadow-[var(--shadow-lg)] hover:-translate-y-1"
+                className="border-border-light flex flex-col rounded-xl border bg-white p-6 shadow-[var(--shadow-sm)] transition-all duration-250 hover:-translate-y-1 hover:shadow-[var(--shadow-lg)]"
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/[0.08]">
+                <div className="bg-primary/[0.08] mb-4 flex h-12 w-12 items-center justify-center rounded-lg">
                   <item.icon
-                    className="h-6 w-6 text-primary"
+                    className="text-primary h-6 w-6"
                     aria-hidden="true"
                   />
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-primary">
+                <h3 className="text-primary mb-2 text-lg font-semibold">
                   {item.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-foreground-muted">
+                <p className="text-foreground-muted text-sm leading-relaxed">
                   {item.description}
                 </p>
               </article>
@@ -480,16 +512,16 @@ export default function Home() {
       >
         <div className="container-narrow">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-accent">
+            <p className="text-accent mb-2 text-sm font-semibold tracking-widest uppercase">
               Student Stories
             </p>
             <h2
               id="testimonials-heading"
-              className="text-3xl font-bold text-primary md:text-4xl"
+              className="text-primary text-3xl font-bold md:text-4xl"
             >
               What Our Students Say
             </h2>
-            <p className="mt-4 text-foreground-muted">
+            <p className="text-foreground-muted mt-4">
               Hear from students who turned their study abroad dreams into
               reality with our guidance.
             </p>
@@ -499,9 +531,12 @@ export default function Home() {
             {testimonials.map((testimonial) => (
               <blockquote
                 key={testimonial.name}
-                className="flex flex-col rounded-xl border border-border-light bg-white p-6 shadow-[var(--shadow-sm)]"
+                className="border-border-light flex flex-col rounded-xl border bg-white p-6 shadow-[var(--shadow-sm)]"
               >
-                <div className="mb-3 flex gap-0.5" aria-label={`${testimonial.rating} out of 5 stars`}>
+                <div
+                  className="mb-3 flex gap-0.5"
+                  aria-label={`${testimonial.rating} out of 5 stars`}
+                >
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
                     <Star
                       key={i}
@@ -510,14 +545,14 @@ export default function Home() {
                     />
                   ))}
                 </div>
-                <p className="flex-1 text-sm leading-relaxed text-foreground-muted italic">
+                <p className="text-foreground-muted flex-1 text-sm leading-relaxed italic">
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
-                <footer className="mt-4 border-t border-border-light pt-4">
-                  <p className="font-semibold text-primary">
+                <footer className="border-border-light mt-4 border-t pt-4">
+                  <p className="text-primary font-semibold">
                     {testimonial.name}
                   </p>
-                  <p className="text-xs text-foreground-subtle">
+                  <p className="text-foreground-subtle text-xs">
                     {testimonial.university} &middot; {testimonial.country}
                   </p>
                 </footer>
@@ -534,13 +569,10 @@ export default function Home() {
       >
         <div className="container-narrow">
           <div className="mx-auto max-w-2xl text-center">
-            <h2
-              id="cta-heading"
-              className="text-3xl font-bold md:text-4xl"
-            >
+            <h2 id="cta-heading" className="text-3xl font-bold md:text-4xl">
               Ready to Start Your Journey?
             </h2>
-            <p className="mx-auto mt-4 max-w-lg text-white/80 text-lg">
+            <p className="mx-auto mt-4 max-w-lg text-lg text-white/80">
               Take the first step toward your international education. Book a
               free consultation and let&apos;s build your roadmap together.
             </p>

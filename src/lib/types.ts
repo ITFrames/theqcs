@@ -30,7 +30,12 @@ export interface OtpRecord {
   attempts: number;
 }
 
-export type EnglishTest = "IELTS" | "TOEFL" | "PTE" | "Duolingo" | "Not Taken Yet";
+export type EnglishTest =
+  | "IELTS"
+  | "TOEFL"
+  | "PTE"
+  | "Duolingo"
+  | "Not Taken Yet";
 
 export type StudyLevel =
   | "Diploma"

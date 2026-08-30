@@ -165,7 +165,9 @@ export default function ProgramsPage() {
                 : "bg-white text-[var(--color-foreground-muted)] hover:text-[var(--color-primary)]"
             }`}
           >
-            {t === "all" ? "All Programs" : `My Shortlist (${shortlist.length})`}
+            {t === "all"
+              ? "All Programs"
+              : `My Shortlist (${shortlist.length})`}
           </button>
         ))}
       </div>
@@ -219,7 +221,7 @@ export default function ProgramsPage() {
         style={{ boxShadow: "var(--shadow-sm)" }}
       >
         <div className="relative lg:col-span-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-foreground-subtle)]" />
+          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[var(--color-foreground-subtle)]" />
           <input
             value={filters.q}
             onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))}
@@ -335,7 +337,7 @@ function ProgramCard({
             {program.logo}
           </span>
           <div>
-            <h3 className="text-sm font-semibold leading-tight text-[var(--color-foreground)]">
+            <h3 className="text-sm leading-tight font-semibold text-[var(--color-foreground)]">
               {program.university}
             </h3>
             <p className="text-xs text-[var(--color-foreground-subtle)]">
@@ -391,13 +393,13 @@ function ProgramCard({
       <div className="mt-4 flex gap-2">
         <button
           type="button"
-          className="flex-1 rounded-lg border border-[var(--color-primary)] px-3 py-2 text-xs font-semibold text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-colors"
+          className="flex-1 rounded-lg border border-[var(--color-primary)] px-3 py-2 text-xs font-semibold text-[var(--color-primary)] transition-colors hover:bg-[var(--color-primary)] hover:text-white"
         >
           View Program
         </button>
         <button
           type="button"
-          className="flex-1 rounded-lg bg-[var(--color-accent)] px-3 py-2 text-xs font-semibold text-[var(--color-primary-dark)] hover:bg-[var(--color-accent-light)] transition-colors"
+          className="flex-1 rounded-lg bg-[var(--color-accent)] px-3 py-2 text-xs font-semibold text-[var(--color-primary-dark)] transition-colors hover:bg-[var(--color-accent-light)]"
         >
           I&apos;m Interested
         </button>

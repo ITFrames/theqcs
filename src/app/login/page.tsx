@@ -98,7 +98,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-[#f0f4f8] via-[#ffffff] to-[#f8f6f0]">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#f0f4f8] via-[#ffffff] to-[#f8f6f0] px-4 py-12">
       <div className="w-full max-w-md">
         <div
           className="rounded-2xl p-8 sm:p-10"
@@ -109,11 +109,11 @@ export default function LoginPage() {
             border: "1px solid var(--color-border-light)",
           }}
         >
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[var(--color-primary)] mb-4">
-              <GraduationCap className="w-7 h-7 text-white" />
+          <div className="mb-8 text-center">
+            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-primary)]">
+              <GraduationCap className="h-7 w-7 text-white" />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-gradient">
+            <h1 className="text-gradient text-2xl font-bold tracking-tight">
               QCS ABROAD
             </h1>
             <h2 className="mt-3 text-xl font-semibold text-[var(--color-foreground)]">
@@ -131,13 +131,13 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-[var(--color-foreground)] mb-1.5"
+                  className="mb-1.5 block text-sm font-medium text-[var(--color-foreground)]"
                 >
                   Email Address
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                    <Mail className="w-4.5 h-4.5 text-[var(--color-foreground-subtle)]" />
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                    <Mail className="h-4.5 w-4.5 text-[var(--color-foreground-subtle)]" />
                   </div>
                   <input
                     id="email"
@@ -148,7 +148,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="block w-full pl-11 pr-4 py-2.5 text-sm rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] placeholder:text-[var(--color-foreground-subtle)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]"
+                    className="block w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] py-2.5 pr-4 pl-11 text-sm text-[var(--color-foreground)] transition-all duration-200 placeholder:text-[var(--color-foreground-subtle)] focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)] focus:outline-none"
                   />
                 </div>
               </div>
@@ -156,13 +156,13 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-[var(--color-foreground)] mb-1.5"
+                  className="mb-1.5 block text-sm font-medium text-[var(--color-foreground)]"
                 >
                   Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                    <Lock className="w-4.5 h-4.5 text-[var(--color-foreground-subtle)]" />
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                    <Lock className="h-4.5 w-4.5 text-[var(--color-foreground-subtle)]" />
                   </div>
                   <input
                     id="password"
@@ -173,30 +173,32 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="block w-full pl-11 pr-11 py-2.5 text-sm rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)] placeholder:text-[var(--color-foreground-subtle)] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]"
+                    className="block w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] py-2.5 pr-11 pl-11 text-sm text-[var(--color-foreground)] transition-all duration-200 placeholder:text-[var(--color-foreground-subtle)] focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)] focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((s) => !s)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[var(--color-foreground-subtle)] hover:text-[var(--color-primary)]"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-[var(--color-foreground-subtle)] hover:text-[var(--color-primary)]"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
-                      <EyeOff className="w-4.5 h-4.5" />
+                      <EyeOff className="h-4.5 w-4.5" />
                     ) : (
-                      <Eye className="w-4.5 h-4.5" />
+                      <Eye className="h-4.5 w-4.5" />
                     )}
                   </button>
                 </div>
               </div>
 
               <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex cursor-pointer items-center gap-2">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-[var(--color-border)] text-[var(--color-primary)] focus:ring-[var(--color-accent)] cursor-pointer"
+                    className="h-4 w-4 cursor-pointer rounded border-[var(--color-border)] text-[var(--color-primary)] focus:ring-[var(--color-accent)]"
                   />
                   <span className="text-sm text-[var(--color-foreground-muted)]">
                     Remember me
@@ -219,7 +221,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-2.5 px-4 text-sm font-semibold text-white rounded-lg bg-[var(--color-primary)] hover:bg-[var(--color-primary-light)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                className="w-full rounded-lg bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--color-primary-light)] hover:shadow-lg focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 focus:outline-none active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? "Signing in…" : "Sign In"}
               </button>
@@ -229,7 +231,7 @@ export default function LoginPage() {
                   <div className="w-full border-t border-[var(--color-border)]" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-3 text-[var(--color-foreground-subtle)] font-medium">
+                  <span className="bg-white px-3 font-medium text-[var(--color-foreground-subtle)]">
                     or
                   </span>
                 </div>
@@ -239,7 +241,7 @@ export default function LoginPage() {
                 New student?{" "}
                 <Link
                   href="/register"
-                  className="font-semibold text-[var(--color-primary)] hover:text-[var(--color-accent-dark)] underline-accent"
+                  className="underline-accent font-semibold text-[var(--color-primary)] hover:text-[var(--color-accent-dark)]"
                 >
                   Create an account
                 </Link>
@@ -260,7 +262,7 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-6 flex items-center justify-center gap-2 text-xs text-[var(--color-foreground-subtle)]">
-          <Shield className="w-3.5 h-3.5" />
+          <Shield className="h-3.5 w-3.5" />
           <span>Secured with 256-bit SSL encryption</span>
         </div>
       </div>

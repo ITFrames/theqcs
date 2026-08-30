@@ -1,7 +1,7 @@
 /** Instant loading skeleton for the Documents page. */
 export default function DocumentsLoading() {
   return (
-    <div className="space-y-6 animate-pulse">
+    <div className="animate-pulse space-y-6">
       <div className="space-y-2">
         <div className="h-8 w-52 rounded bg-[var(--color-background-muted)]" />
         <div className="h-4 w-96 max-w-full rounded bg-[var(--color-background-muted)]" />

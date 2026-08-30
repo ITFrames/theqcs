@@ -383,7 +383,9 @@ export const countryGuides: CountryGuide[] = [
       },
       {
         heading: "Top Universities",
-        paragraphs: ["New Zealand's universities punch well above their weight."],
+        paragraphs: [
+          "New Zealand's universities punch well above their weight.",
+        ],
         bullets: [
           "University of Auckland",
           "University of Otago",
@@ -438,7 +440,10 @@ export const countryGuides: CountryGuide[] = [
     updated: "2026-08-28",
     quickFacts: [
       { label: "Intakes", value: "Winter (Oct), Summer (Apr)" },
-      { label: "Avg. Tuition", value: "€0 – 20,000 / year (public often free)" },
+      {
+        label: "Avg. Tuition",
+        value: "€0 – 20,000 / year (public often free)",
+      },
       { label: "Post-Study Work", value: "18-month job-search visa" },
       { label: "Tests", value: "IELTS/TOEFL (+ German for some)" },
       { label: "Popular Cities", value: "Munich, Berlin, Aachen" },
@@ -459,7 +464,9 @@ export const countryGuides: CountryGuide[] = [
       },
       {
         heading: "Top Universities",
-        paragraphs: ["Germany's technical and research universities are globally renowned."],
+        paragraphs: [
+          "Germany's technical and research universities are globally renowned.",
+        ],
         bullets: [
           "Technical University of Munich (TUM)",
           "Ludwig Maximilian University of Munich (LMU)",
@@ -514,7 +521,10 @@ export const countryGuides: CountryGuide[] = [
     quickFacts: [
       { label: "Intakes", value: "Sep (main), Jan (some courses)" },
       { label: "Avg. Tuition", value: "€10,000 – 25,000 / year" },
-      { label: "Post-Study Work", value: "Up to 2 years (Third Level Graduate)" },
+      {
+        label: "Post-Study Work",
+        value: "Up to 2 years (Third Level Graduate)",
+      },
       { label: "Tests", value: "IELTS / TOEFL / PTE" },
       { label: "Popular Cities", value: "Dublin, Cork, Galway" },
     ],
@@ -534,7 +544,9 @@ export const countryGuides: CountryGuide[] = [
       },
       {
         heading: "Top Universities",
-        paragraphs: ["Ireland's universities are well regarded internationally."],
+        paragraphs: [
+          "Ireland's universities are well regarded internationally.",
+        ],
         bullets: [
           "Trinity College Dublin",
           "University College Dublin (UCD)",
@@ -608,7 +620,9 @@ export const countryGuides: CountryGuide[] = [
       },
       {
         heading: "Top Universities",
-        paragraphs: ["France's institutions span elite Grandes Écoles and research universities."],
+        paragraphs: [
+          "France's institutions span elite Grandes Écoles and research universities.",
+        ],
         bullets: [
           "Université PSL (Paris Sciences & Lettres)",
           "HEC Paris (business)",
@@ -682,7 +696,9 @@ export const countryGuides: CountryGuide[] = [
       },
       {
         heading: "Top Universities",
-        paragraphs: ["Dutch universities are research-strong and globally ranked."],
+        paragraphs: [
+          "Dutch universities are research-strong and globally ranked.",
+        ],
         bullets: [
           "Delft University of Technology (TU Delft)",
           "University of Amsterdam",
@@ -756,7 +772,9 @@ export const countryGuides: CountryGuide[] = [
       },
       {
         heading: "Top Universities",
-        paragraphs: ["Italy's universities blend history with modern excellence."],
+        paragraphs: [
+          "Italy's universities blend history with modern excellence.",
+        ],
         bullets: [
           "Politecnico di Milano (design & engineering)",
           "University of Bologna",
@@ -904,7 +922,9 @@ export const countryGuides: CountryGuide[] = [
       },
       {
         heading: "Top Universities",
-        paragraphs: ["Sweden's universities are research-intensive and globally ranked."],
+        paragraphs: [
+          "Sweden's universities are research-intensive and globally ranked.",
+        ],
         bullets: [
           "KTH Royal Institute of Technology",
           "Lund University",

@@ -35,7 +35,10 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 },
+    );
   }
 
   if (!body.documentId || !body.fileName) {
@@ -103,11 +106,17 @@ export async function PATCH(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 },
+    );
   }
 
   if (!body.documentId) {
-    return NextResponse.json({ error: "documentId is required." }, { status: 400 });
+    return NextResponse.json(
+      { error: "documentId is required." },
+      { status: 400 },
+    );
   }
 
   // Authoritative validation — never trust the client check alone.
@@ -145,11 +154,17 @@ export async function DELETE(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 },
+    );
   }
 
   if (!body.documentId) {
-    return NextResponse.json({ error: "documentId is required." }, { status: 400 });
+    return NextResponse.json(
+      { error: "documentId is required." },
+      { status: 400 },
+    );
   }
 
   // Best-effort remove the stored object (don't fail the reset if it's gone).

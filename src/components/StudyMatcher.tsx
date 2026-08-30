@@ -53,25 +53,25 @@ export default function StudyMatcher() {
       <div className="container-narrow">
         {/* Heading */}
         <div className="mx-auto max-w-2xl text-center">
-          <p className="mb-2 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-accent">
+          <p className="text-accent mb-2 inline-flex items-center gap-2 text-sm font-semibold tracking-widest uppercase">
             <Sparkles className="h-4 w-4" aria-hidden="true" />
             Free Interactive Tool
           </p>
           <h2
             id="matcher-heading"
-            className="text-3xl font-bold text-primary md:text-4xl"
+            className="text-primary text-3xl font-bold md:text-4xl"
           >
             Find Your Perfect Fit
           </h2>
-          <p className="mt-4 text-foreground-muted">
+          <p className="text-foreground-muted mt-4">
             Answer a few quick questions and get an instant, personalized
-            recommendation — no other consultancy makes deciding this easy.
-            Your journey, your priorities, your match.
+            recommendation — no other consultancy makes deciding this easy. Your
+            journey, your priorities, your match.
           </p>
         </div>
 
         {/* Mode switcher */}
-        <div className="mx-auto mt-8 flex max-w-md rounded-full bg-background-muted p-1">
+        <div className="bg-background-muted mx-auto mt-8 flex max-w-md rounded-full p-1">
           <button
             type="button"
             onClick={() => setMode("country")}
@@ -99,7 +99,7 @@ export default function StudyMatcher() {
         </div>
 
         {/* Card */}
-        <div className="mx-auto mt-8 max-w-3xl rounded-3xl border border-border-light bg-white p-6 shadow-[var(--shadow-lg)] md:p-10">
+        <div className="border-border-light mx-auto mt-8 max-w-3xl rounded-3xl border bg-white p-6 shadow-[var(--shadow-lg)] md:p-10">
           {mode === "country" ? <CountryMatcher /> : <ProgramMatcher />}
         </div>
       </div>
@@ -147,11 +147,11 @@ function CountryMatcher() {
         onBack={step > 0 ? () => setStep(step - 1) : undefined}
       />
 
-      <h3 className="mt-6 text-xl font-bold text-primary md:text-2xl">
+      <h3 className="text-primary mt-6 text-xl font-bold md:text-2xl">
         {current.question}
       </h3>
       {current.helper && (
-        <p className="mt-1 text-sm text-foreground-subtle">{current.helper}</p>
+        <p className="text-foreground-subtle mt-1 text-sm">{current.helper}</p>
       )}
 
       <div className="mt-6 grid gap-3">
@@ -168,9 +168,9 @@ function CountryMatcher() {
                   : "border-border-light hover:border-primary/40 hover:bg-background-alt"
               }`}
             >
-              <span className="font-medium text-foreground">{opt.label}</span>
+              <span className="text-foreground font-medium">{opt.label}</span>
               <ArrowRight
-                className="h-5 w-5 shrink-0 text-primary opacity-0 transition-opacity group-hover:opacity-100"
+                className="text-primary h-5 w-5 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
                 aria-hidden="true"
               />
             </button>
@@ -190,9 +190,9 @@ function CountryResultView({
 }) {
   const { best, runnerUp, confidence, reasons } = result;
   return (
-    <div className="text-center animate-result-reveal">
+    <div className="animate-result-reveal text-center">
       <Celebration fire={best.name} />
-      <div className="inline-flex items-center gap-2 rounded-full bg-accent/15 px-4 py-1.5 text-sm font-semibold text-accent-dark">
+      <div className="bg-accent/15 text-accent-dark inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold">
         <Trophy className="h-4 w-4" aria-hidden="true" />
         Your Best Match 🎉
       </div>
@@ -200,18 +200,20 @@ function CountryResultView({
       <div className="mt-6 text-7xl" aria-hidden="true">
         {best.flag}
       </div>
-      <h3 className="mt-3 text-3xl font-bold text-primary">
+      <h3 className="text-primary mt-3 text-3xl font-bold">
         Study in {best.name}
       </h3>
-      <p className="mx-auto mt-3 max-w-lg text-foreground-muted">{best.blurb}</p>
+      <p className="text-foreground-muted mx-auto mt-3 max-w-lg">
+        {best.blurb}
+      </p>
 
       {/* Confidence meter */}
       <div className="mx-auto mt-6 max-w-sm">
-        <div className="flex items-center justify-between text-xs font-medium text-foreground-subtle">
+        <div className="text-foreground-subtle flex items-center justify-between text-xs font-medium">
           <span>Match confidence</span>
           <span className="text-primary">{confidence}%</span>
         </div>
-        <div className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-background-muted">
+        <div className="bg-background-muted mt-1.5 h-2.5 w-full overflow-hidden rounded-full">
           <div
             className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] transition-all duration-700"
             style={{ width: `${confidence}%` }}
@@ -221,26 +223,30 @@ function CountryResultView({
 
       {/* Reasoning */}
       {reasons.length > 0 && (
-        <div className="mx-auto mt-6 max-w-lg rounded-xl bg-background-alt p-5 text-left">
-          <p className="text-sm font-semibold text-primary">
+        <div className="bg-background-alt mx-auto mt-6 max-w-lg rounded-xl p-5 text-left">
+          <p className="text-primary text-sm font-semibold">
             Why {best.name} fits you:
           </p>
           <ul className="mt-3 space-y-2">
             {reasons.map((r, i) => (
               <li
                 key={i}
-                className="flex items-start gap-2 text-sm text-foreground-muted"
+                className="text-foreground-muted flex items-start gap-2 text-sm"
               >
                 <CheckCircle2
-                  className="mt-0.5 h-4 w-4 shrink-0 text-accent"
+                  className="text-accent mt-0.5 h-4 w-4 shrink-0"
                   aria-hidden="true"
                 />
                 <span className="capitalize">{r}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-xs text-foreground-subtle">
-            Runner-up: <span className="font-medium">{runnerUp.flag} {runnerUp.name}</span> — also worth considering.
+          <p className="text-foreground-subtle mt-4 text-xs">
+            Runner-up:{" "}
+            <span className="font-medium">
+              {runnerUp.flag} {runnerUp.name}
+            </span>{" "}
+            — also worth considering.
           </p>
         </div>
       )}
@@ -258,7 +264,7 @@ function CountryResultView({
       <button
         type="button"
         onClick={onReset}
-        className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-foreground-subtle hover:text-primary"
+        className="text-foreground-subtle hover:text-primary mt-5 inline-flex items-center gap-1.5 text-sm font-medium"
       >
         <RotateCcw className="h-4 w-4" aria-hidden="true" />
         Retake the quiz
@@ -307,7 +313,7 @@ function ProgramMatcher() {
           background: next.background,
           interest: next.interest,
           goal: next.goal,
-        })
+        }),
       );
     }
   };
@@ -331,7 +337,7 @@ function ProgramMatcher() {
         onBack={step > 0 ? () => setStep(step - 1) : undefined}
       />
 
-      <h3 className="mt-6 text-xl font-bold text-primary md:text-2xl">
+      <h3 className="text-primary mt-6 text-xl font-bold md:text-2xl">
         {current.question}
       </h3>
 
@@ -349,9 +355,9 @@ function ProgramMatcher() {
                   : "border-border-light hover:border-primary/40 hover:bg-background-alt"
               }`}
             >
-              <span className="font-medium text-foreground">{opt.label}</span>
+              <span className="text-foreground font-medium">{opt.label}</span>
               <ArrowRight
-                className="h-4 w-4 shrink-0 text-primary opacity-0 transition-opacity group-hover:opacity-100"
+                className="text-primary h-4 w-4 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
                 aria-hidden="true"
               />
             </button>
@@ -374,30 +380,30 @@ function ProgramResultView({
     <div className="animate-result-reveal">
       <Celebration fire={top.title} />
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 rounded-full bg-accent/15 px-4 py-1.5 text-sm font-semibold text-accent-dark">
+        <div className="bg-accent/15 text-accent-dark inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold">
           <Trophy className="h-4 w-4" aria-hidden="true" />
           Recommended for You 🎉
         </div>
       </div>
 
       {/* Top recommendation */}
-      <div className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-6">
+      <div className="border-primary/20 bg-primary/5 mt-6 rounded-2xl border p-6">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold uppercase tracking-widest text-accent-dark">
+          <span className="text-accent-dark text-xs font-semibold tracking-widest uppercase">
             Best Match
           </span>
-          <span className="text-sm font-bold text-primary">
+          <span className="text-primary text-sm font-bold">
             {matchPercent}% fit
           </span>
         </div>
-        <h3 className="mt-2 text-xl font-bold text-primary md:text-2xl">
+        <h3 className="text-primary mt-2 text-xl font-bold md:text-2xl">
           {top.title}
         </h3>
-        <p className="mt-3 text-sm leading-relaxed text-foreground-muted">
+        <p className="text-foreground-muted mt-3 text-sm leading-relaxed">
           {top.why}
         </p>
         <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-foreground-subtle">
+          <p className="text-foreground-subtle text-xs font-medium tracking-wide uppercase">
             Strong destinations for this field
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -405,7 +411,7 @@ function ProgramResultView({
               <Link
                 key={code}
                 href={`/blog/${COUNTRY_META[code].slug}`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-white border border-border-light px-3 py-1 text-sm font-medium text-primary transition-colors hover:border-primary/40"
+                className="border-border-light text-primary hover:border-primary/40 inline-flex items-center gap-1.5 rounded-full border bg-white px-3 py-1 text-sm font-medium transition-colors"
               >
                 <span aria-hidden="true">{COUNTRY_META[code].flag}</span>
                 {COUNTRY_META[code].name}
@@ -418,17 +424,17 @@ function ProgramResultView({
       {/* Alternatives */}
       {alternatives.length > 0 && (
         <div className="mt-6">
-          <p className="text-sm font-semibold text-primary">
+          <p className="text-primary text-sm font-semibold">
             Other strong options for you:
           </p>
           <div className="mt-3 grid gap-3">
             {alternatives.map((alt) => (
               <div
                 key={alt.title}
-                className="rounded-xl border border-border-light p-4"
+                className="border-border-light rounded-xl border p-4"
               >
-                <p className="font-medium text-foreground">{alt.title}</p>
-                <p className="mt-1 text-xs text-foreground-muted">{alt.why}</p>
+                <p className="text-foreground font-medium">{alt.title}</p>
+                <p className="text-foreground-muted mt-1 text-xs">{alt.why}</p>
               </div>
             ))}
           </div>
@@ -449,7 +455,7 @@ function ProgramResultView({
         <button
           type="button"
           onClick={onReset}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground-subtle hover:text-primary"
+          className="text-foreground-subtle hover:text-primary inline-flex items-center gap-1.5 text-sm font-medium"
         >
           <RotateCcw className="h-4 w-4" aria-hidden="true" />
           Start over
@@ -479,7 +485,7 @@ function ProgressHeader({
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex items-center gap-1 text-sm font-medium text-foreground-subtle hover:text-primary"
+            className="text-foreground-subtle hover:text-primary inline-flex items-center gap-1 text-sm font-medium"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Back
@@ -487,11 +493,11 @@ function ProgressHeader({
         ) : (
           <span />
         )}
-        <span className="text-sm font-medium text-foreground-subtle">
+        <span className="text-foreground-subtle text-sm font-medium">
           Question {step + 1} of {total}
         </span>
       </div>
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-background-muted">
+      <div className="bg-background-muted mt-3 h-2 w-full overflow-hidden rounded-full">
         <div
           className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] transition-all duration-500"
           style={{ width: `${progress}%` }}

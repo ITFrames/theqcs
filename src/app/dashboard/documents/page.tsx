@@ -194,7 +194,7 @@ export default function DocumentsPage() {
   // Only show documents relevant to this student's highest qualification.
   const visibleDocuments = useMemo(() => {
     const rank = profile?.highestQualification
-      ? QUALIFICATION_RANK[profile.highestQualification] ?? 99
+      ? (QUALIFICATION_RANK[profile.highestQualification] ?? 99)
       : 99;
     return documents.filter((d) => {
       const min = DOC_MIN_RANK[d.name];
@@ -219,7 +219,9 @@ export default function DocumentsPage() {
   }, [visibleDocuments]);
 
   // Progress is measured against REQUIRED documents only.
-  const requiredDocs = visibleDocuments.filter((d) => MANDATORY_DOCS.has(d.name));
+  const requiredDocs = visibleDocuments.filter((d) =>
+    MANDATORY_DOCS.has(d.name),
+  );
   const requiredUploaded = requiredDocs.filter(isUploaded).length;
   const percent = requiredDocs.length
     ? Math.round((requiredUploaded / requiredDocs.length) * 100)
@@ -403,7 +405,7 @@ function DocumentCard({
             type="button"
             disabled={uploading}
             onClick={() => inputRef.current?.click()}
-            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] px-3 py-2 text-xs font-medium text-[var(--color-foreground-muted)] hover:border-[var(--color-accent)] hover:text-[var(--color-primary)] disabled:opacity-60 transition-colors"
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] px-3 py-2 text-xs font-medium text-[var(--color-foreground-muted)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-primary)] disabled:opacity-60"
           >
             <UploadCloud className="h-4 w-4" />
             {uploading ? "Uploading…" : "Replace"}
@@ -413,7 +415,7 @@ function DocumentCard({
             disabled={uploading}
             onClick={() => onDelete(doc.id, doc.fileName)}
             aria-label={`Delete ${doc.name}`}
-            className="flex items-center justify-center gap-1.5 rounded-lg border border-red-200 px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-60 transition-colors"
+            className="flex items-center justify-center gap-1.5 rounded-lg border border-red-200 px-3 py-2 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60"
           >
             <Trash2 className="h-4 w-4" />
             Delete

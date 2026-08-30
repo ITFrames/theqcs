@@ -50,7 +50,9 @@ const STAGE_H = VIEWBOX.height;
  * their flags would overlap. These small manual offsets (in viewBox units) fan
  * them out into a readable cluster while keeping them near their real location.
  */
-const FLAG_OFFSETS: Partial<Record<keyof typeof PIN_COORDS, { dx: number; dy: number }>> = {
+const FLAG_OFFSETS: Partial<
+  Record<keyof typeof PIN_COORDS, { dx: number; dy: number }>
+> = {
   IE: { dx: -3.5, dy: -1.5 }, // Ireland — west
   UK: { dx: -1.5, dy: -3 }, //   UK — north-west
   NL: { dx: 1.5, dy: -3.5 }, //  Netherlands — north
@@ -89,7 +91,7 @@ export default function FlightRoutes() {
     >
       <div className="container-narrow relative z-10">
         <div className="mx-auto mb-10 max-w-2xl text-center">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-[var(--color-accent)]">
+          <p className="mb-2 text-sm font-semibold tracking-widest text-[var(--color-accent)] uppercase">
             Your World Awaits
           </p>
           <h2 className="text-3xl font-bold text-white md:text-4xl">
@@ -129,8 +131,20 @@ export default function FlightRoutes() {
               const cy = base.y + offset.dy;
               return (
                 <g key={`hl-${dest.code}`}>
-                  <circle cx={cx} cy={cy} r="2.4" fill="var(--color-accent)" fillOpacity="0.25" />
-                  <circle cx={cx} cy={cy} r="1.3" fill="var(--color-accent)" fillOpacity="0.5" />
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r="2.4"
+                    fill="var(--color-accent)"
+                    fillOpacity="0.25"
+                  />
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r="1.3"
+                    fill="var(--color-accent)"
+                    fillOpacity="0.5"
+                  />
                 </g>
               );
             })}
@@ -161,9 +175,9 @@ export default function FlightRoutes() {
             style={{ left: `${pctX(HUB.x)}%`, top: `${pctY(HUB.y)}%` }}
           >
             <div className="relative flex items-center justify-center">
-              <span className="absolute h-10 w-10 rounded-full bg-[var(--color-accent)]/40 pulse-ring" />
+              <span className="pulse-ring absolute h-10 w-10 rounded-full bg-[var(--color-accent)]/40" />
               <span className="relative flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-lg ring-4 ring-[var(--color-accent)]/30 md:h-12 md:w-12">
-                <span className="text-[9px] font-bold leading-tight text-[var(--color-primary)]">
+                <span className="text-[9px] leading-tight font-bold text-[var(--color-primary)]">
                   QCS
                 </span>
               </span>
@@ -185,9 +199,7 @@ export default function FlightRoutes() {
                 title={dest.name}
               >
                 <div className="flag-bob">
-                  <span
-                    className="block text-lg leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] transition-transform duration-200 hover:scale-125 md:text-xl"
-                  >
+                  <span className="block text-lg leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] transition-transform duration-200 hover:scale-125 md:text-xl">
                     {dest.flag}
                   </span>
                 </div>

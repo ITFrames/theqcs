@@ -214,16 +214,18 @@ export const supabaseStore = {
 
   /* OTP */
   async saveOtp(rec: OtpRecord): Promise<void> {
-    await sb().from("otps").upsert(
-      {
-        email: rec.email.toLowerCase(),
-        purpose: rec.purpose,
-        code: rec.code,
-        expires_at: new Date(rec.expiresAt).toISOString(),
-        attempts: rec.attempts,
-      },
-      { onConflict: "email,purpose" },
-    );
+    await sb()
+      .from("otps")
+      .upsert(
+        {
+          email: rec.email.toLowerCase(),
+          purpose: rec.purpose,
+          code: rec.code,
+          expires_at: new Date(rec.expiresAt).toISOString(),
+          attempts: rec.attempts,
+        },
+        { onConflict: "email,purpose" },
+      );
   },
 
   async getOtp(
@@ -316,19 +318,21 @@ export const supabaseStore = {
 
     // Seed a realistic starter set on first access.
     const seeded = seedApplications(userId);
-    await sb().from("applications").insert(
-      seeded.map((a) => ({
-        id: a.id,
-        user_id: a.userId,
-        university: a.university,
-        program: a.program,
-        country: a.country,
-        flag: a.flag,
-        intake: a.intake,
-        application_id: a.applicationId,
-        status: a.status,
-      })),
-    );
+    await sb()
+      .from("applications")
+      .insert(
+        seeded.map((a) => ({
+          id: a.id,
+          user_id: a.userId,
+          university: a.university,
+          program: a.program,
+          country: a.country,
+          flag: a.flag,
+          intake: a.intake,
+          application_id: a.applicationId,
+          status: a.status,
+        })),
+      );
     return seeded;
   },
 
@@ -341,17 +345,19 @@ export const supabaseStore = {
     if (data && data.length > 0) return data.map(rowToDocument);
 
     const seeded = seedDocuments(userId);
-    await sb().from("documents").insert(
-      seeded.map((d) => ({
-        id: d.id,
-        user_id: d.userId,
-        category: d.category,
-        name: d.name,
-        status: d.status,
-        file_name: d.fileName ?? null,
-        uploaded_at: d.uploadedAt ?? null,
-      })),
-    );
+    await sb()
+      .from("documents")
+      .insert(
+        seeded.map((d) => ({
+          id: d.id,
+          user_id: d.userId,
+          category: d.category,
+          name: d.name,
+          status: d.status,
+          file_name: d.fileName ?? null,
+          uploaded_at: d.uploadedAt ?? null,
+        })),
+      );
     return seeded;
   },
 
@@ -403,7 +409,9 @@ export const supabaseStore = {
         .eq("user_id", userId)
         .eq("program_id", programId);
     } else {
-      await sb().from("shortlist").insert({ user_id: userId, program_id: programId });
+      await sb()
+        .from("shortlist")
+        .insert({ user_id: userId, program_id: programId });
     }
     return this.getShortlist(userId);
   },

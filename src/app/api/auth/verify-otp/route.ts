@@ -14,10 +14,15 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 },
+    );
   }
 
-  const email = String(body.email ?? "").trim().toLowerCase();
+  const email = String(body.email ?? "")
+    .trim()
+    .toLowerCase();
   const code = String(body.code ?? "").trim();
   const purpose = body.purpose === "login" ? "login" : "register";
 
@@ -67,7 +72,10 @@ export async function POST(request: Request) {
 
     const user = await db.findUserByEmail(email);
     if (!user) {
-      return NextResponse.json({ error: "Account not found." }, { status: 404 });
+      return NextResponse.json(
+        { error: "Account not found." },
+        { status: 404 },
+      );
     }
 
     await setSessionCookie(user.id);
@@ -82,7 +90,10 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error("[qcs] verify-otp failed:", err);
     return NextResponse.json(
-      { error: "We couldn't verify your code right now. Please try again later." },
+      {
+        error:
+          "We couldn't verify your code right now. Please try again later.",
+      },
       { status: 500 },
     );
   }

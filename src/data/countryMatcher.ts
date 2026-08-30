@@ -223,9 +223,15 @@ export interface CountryResult {
  * Compute the recommended country from a map of questionId -> optionId.
  */
 export function scoreCountries(
-  answers: Record<string, string>
+  answers: Record<string, string>,
 ): CountryResult | null {
-  const totals: Record<CountryCode, number> = { CA: 0, US: 0, UK: 0, AU: 0, NZ: 0 };
+  const totals: Record<CountryCode, number> = {
+    CA: 0,
+    US: 0,
+    UK: 0,
+    AU: 0,
+    NZ: 0,
+  };
   const reasons: string[] = [];
 
   for (const q of COUNTRY_QUESTIONS) {
@@ -251,7 +257,7 @@ export function scoreCountries(
   const totalPoints = ranked.reduce((sum, r) => sum + r.score, 0) || 1;
   const confidence = Math.min(
     98,
-    Math.round((topScore / totalPoints) * 100 + (topScore - secondScore) * 4)
+    Math.round((topScore / totalPoints) * 100 + (topScore - secondScore) * 4),
   );
 
   return {

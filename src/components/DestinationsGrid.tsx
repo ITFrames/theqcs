@@ -32,14 +32,16 @@ const ORDER = [
 ];
 
 const orderedGuides = [...countryGuides].sort(
-  (a, b) => ORDER.indexOf(a.slug) - ORDER.indexOf(b.slug)
+  (a, b) => ORDER.indexOf(a.slug) - ORDER.indexOf(b.slug),
 );
 
 const INITIAL_COUNT = 6;
 
 export default function DestinationsGrid() {
   const [expanded, setExpanded] = useState(false);
-  const visible = expanded ? orderedGuides : orderedGuides.slice(0, INITIAL_COUNT);
+  const visible = expanded
+    ? orderedGuides
+    : orderedGuides.slice(0, INITIAL_COUNT);
 
   return (
     <section
@@ -48,16 +50,16 @@ export default function DestinationsGrid() {
     >
       <div className="container-narrow">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-accent">
+          <p className="text-accent mb-2 text-sm font-semibold tracking-widest uppercase">
             Top Destinations
           </p>
           <h2
             id="destinations-heading"
-            className="text-3xl font-bold text-primary md:text-4xl"
+            className="text-primary text-3xl font-bold md:text-4xl"
           >
             Select Your Country to See More About It
           </h2>
-          <p className="mt-4 text-foreground-muted">
+          <p className="text-foreground-muted mt-4">
             We&apos;ve got ties with nearly 15 countries for you! Below are the
             destinations most students prefer for their higher studies, sorted
             by student interest. Click any country to explore insights on its
@@ -71,10 +73,10 @@ export default function DestinationsGrid() {
             <Link
               key={guide.slug}
               href={`/blog/${guide.slug}`}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-border-light bg-white p-6 shadow-[var(--shadow-sm)] transition-all duration-250 hover:shadow-[var(--shadow-lg)] hover:-translate-y-1 hover:border-accent/40"
+              className="group border-border-light hover:border-accent/40 relative flex flex-col overflow-hidden rounded-2xl border bg-white p-6 shadow-[var(--shadow-sm)] transition-all duration-250 hover:-translate-y-1 hover:shadow-[var(--shadow-lg)]"
             >
               <div
-                className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[var(--color-accent)]/[0.08] blur-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                className="pointer-events-none absolute -top-8 -right-8 h-24 w-24 rounded-full bg-[var(--color-accent)]/[0.08] opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
                 aria-hidden="true"
               />
               <div className="flex items-center gap-3">
@@ -85,18 +87,18 @@ export default function DestinationsGrid() {
                   {guide.flag}
                 </span>
                 <div>
-                  <h3 className="text-lg font-bold text-primary">
+                  <h3 className="text-primary text-lg font-bold">
                     Study in {guide.country}
                   </h3>
-                  <p className="text-xs font-medium uppercase tracking-wider text-accent-dark">
+                  <p className="text-accent-dark text-xs font-medium tracking-wider uppercase">
                     {guide.tagline}
                   </p>
                 </div>
               </div>
-              <p className="mt-4 flex-1 text-sm leading-relaxed text-foreground-muted line-clamp-3">
+              <p className="text-foreground-muted mt-4 line-clamp-3 flex-1 text-sm leading-relaxed">
                 {guide.summary}
               </p>
-              <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors group-hover:text-accent-dark">
+              <span className="text-primary group-hover:text-accent-dark mt-5 inline-flex items-center gap-1 text-sm font-semibold transition-colors">
                 Explore {guide.country}
                 <ArrowRight
                   className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1"

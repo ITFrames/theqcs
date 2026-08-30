@@ -183,7 +183,10 @@ export default function OnboardingPage() {
             const done = i < step;
             const current = i === step;
             return (
-              <li key={label} className="flex flex-1 items-center last:flex-none">
+              <li
+                key={label}
+                className="flex flex-1 items-center last:flex-none"
+              >
                 <div className="flex flex-col items-center gap-1.5">
                   <span
                     className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-all ${
@@ -191,7 +194,7 @@ export default function OnboardingPage() {
                         ? "bg-[var(--color-accent)] text-[var(--color-primary-dark)]"
                         : current
                           ? "bg-[var(--color-primary)] text-white ring-4 ring-[var(--color-primary)]/15"
-                          : "bg-white text-[var(--color-foreground-subtle)] border border-[var(--color-border)]"
+                          : "border border-[var(--color-border)] bg-white text-[var(--color-foreground-subtle)]"
                     }`}
                   >
                     {done ? <Check className="h-4 w-4" /> : i + 1}
@@ -353,10 +356,7 @@ export default function OnboardingPage() {
                     placeholder="2024"
                   />
                 </LabeledField>
-                <LabeledField
-                  label="Grade / GPA / Percentage"
-                  htmlFor="grade"
-                >
+                <LabeledField label="Grade / GPA / Percentage" htmlFor="grade">
                   <TextInput
                     id="grade"
                     value={data.grade ?? ""}
@@ -419,10 +419,7 @@ export default function OnboardingPage() {
                         placeholder="2026"
                       />
                     </LabeledField>
-                    <LabeledField
-                      label="Master's Grade / GPA"
-                      htmlFor="mGrade"
-                    >
+                    <LabeledField label="Master's Grade / GPA" htmlFor="mGrade">
                       <TextInput
                         id="mGrade"
                         value={data.mastersGrade ?? ""}
@@ -462,9 +459,8 @@ export default function OnboardingPage() {
                 </div>
 
                 {/* Per-test score fields for each selected real test. */}
-                {(data.englishTests ?? []).filter(
-                  (t) => t !== "Not Taken Yet",
-                ).length > 0 && (
+                {(data.englishTests ?? []).filter((t) => t !== "Not Taken Yet")
+                  .length > 0 && (
                   <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {(data.englishTests ?? [])
                       .filter((t) => t !== "Not Taken Yet")
@@ -510,7 +506,7 @@ export default function OnboardingPage() {
                       }`}
                     >
                       {selected && (
-                        <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-primary-dark)]">
+                        <span className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-accent)] text-[var(--color-primary-dark)]">
                           <Check className="h-3 w-3" />
                         </span>
                       )}
@@ -555,10 +551,7 @@ export default function OnboardingPage() {
                     onChange={(e) => set("preferredIntake", e.target.value)}
                   />
                 </LabeledField>
-                <LabeledField
-                  label="Expected Start Year"
-                  htmlFor="startYear"
-                >
+                <LabeledField label="Expected Start Year" htmlFor="startYear">
                   <TextInput
                     id="startYear"
                     type="number"
@@ -626,7 +619,7 @@ export default function OnboardingPage() {
               type="button"
               onClick={() => setStep((s) => Math.max(0, s - 1))}
               disabled={step === 0 || saving}
-              className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--color-foreground-muted)] hover:text-[var(--color-primary)] disabled:opacity-0 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--color-foreground-muted)] transition-colors hover:text-[var(--color-primary)] disabled:opacity-0"
             >
               <ChevronLeft className="h-4 w-4" /> Back
             </button>
@@ -636,7 +629,7 @@ export default function OnboardingPage() {
                 type="button"
                 onClick={next}
                 disabled={saving}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-primary)] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[var(--color-primary-light)] disabled:opacity-60 transition-all hover:shadow-lg"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-primary)] px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[var(--color-primary-light)] hover:shadow-lg disabled:opacity-60"
               >
                 {saving ? "Saving…" : "Continue"}
                 <ChevronRight className="h-4 w-4" />
@@ -646,7 +639,7 @@ export default function OnboardingPage() {
                 type="button"
                 onClick={finish}
                 disabled={saving}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[var(--color-primary-dark)] hover:bg-[var(--color-accent-light)] disabled:opacity-60 transition-all hover:shadow-lg"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[var(--color-primary-dark)] transition-all hover:bg-[var(--color-accent-light)] hover:shadow-lg disabled:opacity-60"
               >
                 {saving ? "Finishing…" : "Find My Study Options"}
                 <ChevronRight className="h-4 w-4" />

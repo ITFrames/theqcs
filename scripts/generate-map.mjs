@@ -75,7 +75,7 @@ export const VIEWBOX = { width: ${vbW}, height: ${vbH} };
 export const PIN_COORDS: Record<string, { x: number; y: number }> = ${JSON.stringify(
   pinCoords,
   null,
-  2
+  2,
 )};
 
 export const MAP_DOTS = ${JSON.stringify(inner)};

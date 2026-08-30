@@ -34,10 +34,10 @@ export default function StudentIllustration() {
 
       {/* Floating orbiting badges */}
       <div className="student-orbit absolute inset-0">
-        <span className="absolute left-[6%] top-[18%] flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xl shadow-lg ring-1 ring-black/5">
+        <span className="absolute top-[18%] left-[6%] flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xl shadow-lg ring-1 ring-black/5">
           📚
         </span>
-        <span className="absolute right-[4%] top-[34%] flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xl shadow-lg ring-1 ring-black/5">
+        <span className="absolute top-[34%] right-[4%] flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xl shadow-lg ring-1 ring-black/5">
           🌍
         </span>
         <span className="absolute bottom-[14%] left-[2%] flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-xl shadow-lg ring-1 ring-black/5">
@@ -67,7 +67,14 @@ export default function StudentIllustration() {
         </defs>
 
         {/* Base pedestal shadow */}
-        <ellipse cx="160" cy="336" rx="96" ry="14" fill="#1e3a5f" opacity="0.08" />
+        <ellipse
+          cx="160"
+          cy="336"
+          rx="96"
+          ry="14"
+          fill="#1e3a5f"
+          opacity="0.08"
+        />
 
         {/* Body / torso */}
         <path
@@ -90,12 +97,35 @@ export default function StudentIllustration() {
 
         {/* Stack of books held in front */}
         <g>
-          <rect x="108" y="286" width="104" height="20" rx="4" fill="url(#books)" />
+          <rect
+            x="108"
+            y="286"
+            width="104"
+            height="20"
+            rx="4"
+            fill="url(#books)"
+          />
           <rect x="114" y="304" width="92" height="18" rx="4" fill="#2a4f7a" />
           <rect x="120" y="320" width="80" height="16" rx="4" fill="#d4a853" />
           {/* Book page lines */}
-          <line x1="108" y1="296" x2="212" y2="296" stroke="#ffffff" strokeOpacity="0.35" strokeWidth="1.5" />
-          <line x1="114" y1="313" x2="206" y2="313" stroke="#ffffff" strokeOpacity="0.3" strokeWidth="1.5" />
+          <line
+            x1="108"
+            y1="296"
+            x2="212"
+            y2="296"
+            stroke="#ffffff"
+            strokeOpacity="0.35"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="114"
+            y1="313"
+            x2="206"
+            y2="313"
+            stroke="#ffffff"
+            strokeOpacity="0.3"
+            strokeWidth="1.5"
+          />
         </g>
 
         {/* Hands over books */}
@@ -115,15 +145,38 @@ export default function StudentIllustration() {
         {/* Face features */}
         <circle cx="146" cy="166" r="3.2" fill="#3a2b23" />
         <circle cx="174" cy="166" r="3.2" fill="#3a2b23" />
-        <path d="M150 182 Q160 190 170 182" stroke="#a86b4e" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        <path
+          d="M150 182 Q160 190 170 182"
+          stroke="#a86b4e"
+          strokeWidth="2.5"
+          fill="none"
+          strokeLinecap="round"
+        />
 
         {/* Graduation cap */}
         <g>
           <path d="M110 132 L160 112 L210 132 L160 152 Z" fill="#1e3a5f" />
-          <rect x="150" y="120" width="20" height="12" fill="#152a45" opacity="0.5" />
+          <rect
+            x="150"
+            y="120"
+            width="20"
+            height="12"
+            fill="#152a45"
+            opacity="0.5"
+          />
           {/* Tassel — sways */}
-          <g className="student-tassel" style={{ transformOrigin: "200px 132px" }}>
-            <line x1="200" y1="132" x2="204" y2="158" stroke="#d4a853" strokeWidth="2.5" />
+          <g
+            className="student-tassel"
+            style={{ transformOrigin: "200px 132px" }}
+          >
+            <line
+              x1="200"
+              y1="132"
+              x2="204"
+              y2="158"
+              stroke="#d4a853"
+              strokeWidth="2.5"
+            />
             <circle cx="204" cy="162" r="4" fill="#d4a853" />
           </g>
         </g>

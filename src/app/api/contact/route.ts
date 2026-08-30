@@ -38,7 +38,10 @@ export async function POST(request: Request) {
   if (!limit.allowed) {
     return NextResponse.json(
       { error: "Too many messages. Please try again shortly." },
-      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfterSeconds) },
+      },
     );
   }
 
@@ -46,7 +49,10 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid request body." },
+      { status: 400 },
+    );
   }
 
   // 2) Honeypot — hidden field; only bots fill it. Pretend success.
@@ -74,13 +80,22 @@ export async function POST(request: Request) {
   const message = String(body.message ?? "").trim();
 
   if (fullName.length < 2 || fullName.length > 100) {
-    return NextResponse.json({ error: "Please enter your full name." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Please enter your full name." },
+      { status: 400 },
+    );
   }
   if (!emailRe.test(email)) {
-    return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Please enter a valid email address." },
+      { status: 400 },
+    );
   }
   if (!service) {
-    return NextResponse.json({ error: "Please select a service." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Please select a service." },
+      { status: 400 },
+    );
   }
   if (message.length < 10 || message.length > 2000) {
     return NextResponse.json(
@@ -112,7 +127,10 @@ export async function POST(request: Request) {
 
   if (result.error) {
     return NextResponse.json(
-      { error: "We couldn't send your message right now. Please try again later." },
+      {
+        error:
+          "We couldn't send your message right now. Please try again later.",
+      },
       { status: 502 },
     );
   }
