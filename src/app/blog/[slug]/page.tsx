@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   ArrowRight,
@@ -14,6 +15,7 @@ import {
   getGuideBySlug,
   getAllGuideSlugs,
 } from "@/data/countryGuides";
+import { hasPhoto, photoPath } from "@/data/countryPhotos";
 
 // Pre-render every country guide at build time.
 export function generateStaticParams() {
@@ -22,7 +24,7 @@ export function generateStaticParams() {
 
 // Per-guide SEO metadata.
 export async function generateMetadata(
-  props: PageProps<"/blog/[slug]">
+  props: PageProps<"/blog/[slug]">,
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const guide = getGuideBySlug(slug);
@@ -51,13 +53,33 @@ export default async function GuidePage(props: PageProps<"/blog/[slug]">) {
   }
 
   // Suggest up to 3 other guides as "related reading".
-  const related = countryGuides.filter((g) => g.slug !== guide.slug).slice(0, 3);
+  const related = countryGuides
+    .filter((g) => g.slug !== guide.slug)
+    .slice(0, 3);
 
   return (
     <>
       {/* Article hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#0f2440] via-[#1e3a5f] to-[#152a45] text-white">
-        <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-[var(--color-accent)]/10 blur-3xl" aria-hidden="true" />
+        {/* Cover photo (same iconic landmark as the blog card), dimmed for text contrast */}
+        {hasPhoto(guide.slug) && (
+          <div className="absolute inset-0 z-0" aria-hidden="true">
+            <Image
+              src={photoPath(guide.slug)}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+            {/* Navy wash so the white heading stays readable over the photo. */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0f2440]/85 via-[#1e3a5f]/80 to-[#152a45]/90" />
+          </div>
+        )}
+        <div
+          className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-[var(--color-accent)]/10 blur-3xl"
+          aria-hidden="true"
+        />
 
         <div className="container-narrow relative z-10 py-16 md:py-20">
           <Link
@@ -73,7 +95,7 @@ export default async function GuidePage(props: PageProps<"/blog/[slug]">) {
               {guide.flag}
             </span>
             <div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+              <h1 className="text-3xl leading-tight font-bold md:text-4xl lg:text-5xl">
                 Study in {guide.country}
               </h1>
               <p className="mt-2 text-lg text-[var(--color-accent)]">
@@ -102,17 +124,26 @@ export default async function GuidePage(props: PageProps<"/blog/[slug]">) {
             {/* Article body */}
             <article className="lg:col-span-2">
               {/* Highlights callout */}
-              <div className="mb-10 rounded-2xl border border-border-light bg-background-alt p-6">
+              <div className="border-border-light bg-background-alt mb-10 rounded-2xl border p-6">
                 <div className="mb-3 flex items-center gap-2">
-                  <Star className="h-5 w-5 fill-[var(--color-accent)] text-[var(--color-accent)]" aria-hidden="true" />
-                  <h2 className="text-lg font-bold text-primary">
+                  <Star
+                    className="h-5 w-5 fill-[var(--color-accent)] text-[var(--color-accent)]"
+                    aria-hidden="true"
+                  />
+                  <h2 className="text-primary text-lg font-bold">
                     Why {guide.country} Stands Out
                   </h2>
                 </div>
                 <ul className="grid gap-2.5 sm:grid-cols-2">
                   {guide.highlights.map((h) => (
-                    <li key={h} className="flex items-start gap-2 text-sm text-foreground-muted">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                    <li
+                      key={h}
+                      className="text-foreground-muted flex items-start gap-2 text-sm"
+                    >
+                      <CheckCircle2
+                        className="text-accent mt-0.5 h-4 w-4 shrink-0"
+                        aria-hidden="true"
+                      />
                       <span>{h}</span>
                     </li>
                   ))}
@@ -123,13 +154,13 @@ export default async function GuidePage(props: PageProps<"/blog/[slug]">) {
               <div className="space-y-10">
                 {guide.sections.map((section) => (
                   <div key={section.heading}>
-                    <h2 className="text-2xl font-bold text-primary">
+                    <h2 className="text-primary text-2xl font-bold">
                       {section.heading}
                     </h2>
                     {section.paragraphs.map((p, i) => (
                       <p
                         key={i}
-                        className="mt-3 leading-relaxed text-foreground-muted"
+                        className="text-foreground-muted mt-3 leading-relaxed"
                       >
                         {p}
                       </p>
@@ -139,9 +170,12 @@ export default async function GuidePage(props: PageProps<"/blog/[slug]">) {
                         {section.bullets.map((b) => (
                           <li
                             key={b}
-                            className="flex items-start gap-3 text-foreground-muted"
+                            className="text-foreground-muted flex items-start gap-3"
                           >
-                            <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                            <CheckCircle2
+                              className="text-accent mt-1 h-4 w-4 shrink-0"
+                              aria-hidden="true"
+                            />
                             <span>{b}</span>
                           </li>
                         ))}
@@ -152,7 +186,7 @@ export default async function GuidePage(props: PageProps<"/blog/[slug]">) {
               </div>
 
               {/* Inline CTA */}
-              <div className="mt-12 rounded-2xl bg-primary p-8 text-center text-white">
+              <div className="bg-primary mt-12 rounded-2xl p-8 text-center text-white">
                 <h3 className="text-xl font-bold">
                   Ready to Apply to {guide.country}?
                 </h3>
@@ -160,10 +194,7 @@ export default async function GuidePage(props: PageProps<"/blog/[slug]">) {
                   Our counselors guide you through university selection,
                   applications, and visas — every step of the way.
                 </p>
-                <Link
-                  href="/contact"
-                  className="btn btn-accent mt-5 px-7 py-3"
-                >
+                <Link href="/contact" className="btn btn-accent mt-5 px-7 py-3">
                   Get Personalized Guidance <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -171,19 +202,19 @@ export default async function GuidePage(props: PageProps<"/blog/[slug]">) {
 
             {/* Sidebar */}
             <aside className="lg:col-span-1">
-              <div className="lg:sticky lg:top-24 space-y-8">
+              <div className="space-y-8 lg:sticky lg:top-24">
                 {/* Quick facts */}
-                <div className="rounded-2xl border border-border-light bg-white p-6 shadow-[var(--shadow-sm)]">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-accent">
+                <div className="border-border-light rounded-2xl border bg-white p-6 shadow-[var(--shadow-sm)]">
+                  <h3 className="text-accent text-sm font-bold tracking-widest uppercase">
                     Quick Facts
                   </h3>
                   <dl className="mt-4 space-y-4">
                     {guide.quickFacts.map((fact) => (
                       <div key={fact.label}>
-                        <dt className="text-xs font-medium uppercase tracking-wide text-foreground-subtle">
+                        <dt className="text-foreground-subtle text-xs font-medium tracking-wide uppercase">
                           {fact.label}
                         </dt>
-                        <dd className="mt-0.5 text-sm font-semibold text-primary">
+                        <dd className="text-primary mt-0.5 text-sm font-semibold">
                           {fact.value}
                         </dd>
                       </div>
@@ -192,8 +223,8 @@ export default async function GuidePage(props: PageProps<"/blog/[slug]">) {
                 </div>
 
                 {/* Related guides */}
-                <div className="rounded-2xl border border-border-light bg-white p-6 shadow-[var(--shadow-sm)]">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-accent">
+                <div className="border-border-light rounded-2xl border bg-white p-6 shadow-[var(--shadow-sm)]">
+                  <h3 className="text-accent text-sm font-bold tracking-widest uppercase">
                     Compare Other Countries
                   </h3>
                   <ul className="mt-4 space-y-3">
@@ -201,15 +232,18 @@ export default async function GuidePage(props: PageProps<"/blog/[slug]">) {
                       <li key={g.slug}>
                         <Link
                           href={`/blog/${g.slug}`}
-                          className="group flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-background-alt"
+                          className="group hover:bg-background-alt flex items-center gap-3 rounded-lg p-2 transition-colors"
                         >
                           <span className="text-2xl" aria-hidden="true">
                             {g.flag}
                           </span>
-                          <span className="flex-1 text-sm font-medium text-primary">
+                          <span className="text-primary flex-1 text-sm font-medium">
                             Study in {g.country}
                           </span>
-                          <ArrowRight className="h-4 w-4 text-foreground-subtle transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                          <ArrowRight
+                            className="text-foreground-subtle h-4 w-4 transition-transform group-hover:translate-x-1"
+                            aria-hidden="true"
+                          />
                         </Link>
                       </li>
                     ))}
