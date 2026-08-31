@@ -27,12 +27,18 @@ export async function verifyTurnstile(
   // No secret configured: skip in dev, but never silently pass in production.
   if (!secret) {
     if (process.env.NODE_ENV === "production") {
+      console.error(
+        "[qcs] Turnstile FAIL: TURNSTILE_SECRET_KEY is not set in this " +
+          "(production) environment. Add it in Vercel → Settings → " +
+          "Environment Variables (Production) and redeploy.",
+      );
       return { ok: false, skipped: false, error: "captcha_not_configured" };
     }
     return { ok: true, skipped: true };
   }
 
   if (!token) {
+    console.error("[qcs] Turnstile FAIL: no token received from the client.");
     return { ok: false, skipped: false, error: "missing_token" };
   }
 
@@ -46,11 +52,22 @@ export async function verifyTurnstile(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
       { method: "POST", body: form },
     );
-    const data = (await res.json()) as { success: boolean };
-    return data.success
-      ? { ok: true, skipped: false }
-      : { ok: false, skipped: false, error: "captcha_failed" };
-  } catch {
+    const data = (await res.json()) as {
+      success: boolean;
+      "error-codes"?: string[];
+    };
+    if (data.success) {
+      return { ok: true, skipped: false };
+    }
+    // Surface Cloudflare's reason(s) to the server log for diagnosis, e.g.
+    // "invalid-input-secret", "timeout-or-duplicate", "invalid-input-response".
+    console.error(
+      "[qcs] Turnstile verification failed:",
+      data["error-codes"] ?? "(no error-codes)",
+    );
+    return { ok: false, skipped: false, error: "captcha_failed" };
+  } catch (err) {
+    console.error("[qcs] Turnstile verification error:", err);
     return { ok: false, skipped: false, error: "captcha_error" };
   }
 }
