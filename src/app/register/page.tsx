@@ -16,6 +16,7 @@ import {
 import OtpVerifier from "@/components/auth/OtpVerifier";
 import { trackEvent } from "@/lib/analytics";
 import { useNavLoading } from "@/components/loading/NavLoadingProvider";
+import { readLeadSelections, clearLeadSelections } from "@/lib/lead";
 import {
   validateRegistration,
   hasErrors,
@@ -134,6 +135,26 @@ export default function RegisterPage() {
         { method: "email" },
         { metaStandardEvent: "CompleteRegistration" },
       );
+
+      // Apply any selections captured by the engagement popup to the new
+      // profile (session cookie is set now). Best-effort — never block signup.
+      const lead = readLeadSelections();
+      if (lead && (lead.destinations.length > 0 || lead.program)) {
+        try {
+          await fetch("/api/profile", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              destinations: lead.destinations,
+              ...(lead.program ? { preferredProgram: lead.program } : {}),
+            }),
+          });
+        } catch {
+          /* ignore — onboarding can still collect these */
+        }
+        clearLeadSelections();
+      }
+
       startNav();
       router.push(data.redirect ?? "/onboarding");
     } catch {

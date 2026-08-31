@@ -7,6 +7,7 @@ import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import ConsentBanner from "@/components/consent/ConsentBanner";
 import ConsentedAnalytics from "@/components/consent/ConsentedAnalytics";
 import { NavLoadingProvider } from "@/components/loading/NavLoadingProvider";
+import LeadCapturePopup from "@/components/LeadCapturePopup";
 import "./globals.css";
 
 const inter = Inter({
@@ -131,6 +132,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <FloatingWhatsApp />
             <ConsentBanner />
             <ConsentedAnalytics />
+            <LeadCapturePopup />
           </NavLoadingProvider>
         </ConsentProvider>
       </body>
