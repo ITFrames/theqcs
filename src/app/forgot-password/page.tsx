@@ -15,6 +15,7 @@ export default function ForgotPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [noAccount, setNoAccount] = useState(false);
   const [otpError, setOtpError] = useState<string | null>(null);
   const [devOtp, setDevOtp] = useState<string | undefined>();
   const [expiresIn, setExpiresIn] = useState(60);
@@ -24,6 +25,7 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setSubmitting(true);
     setError(null);
+    setNoAccount(false);
     try {
       const res = await fetch("/api/auth/request-password-reset", {
         method: "POST",
@@ -32,7 +34,8 @@ export default function ForgotPasswordPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Something went wrong. Please try again.");
+        if (data.error === "no_account") setNoAccount(true);
+        setError(data.message ?? data.error ?? "Something went wrong. Please try again.");
         return;
       }
       setDevOtp(data.devOtp);
@@ -153,9 +156,17 @@ export default function ForgotPasswordPage() {
               </div>
 
               {error && (
-                <p className="text-sm text-red-600" role="alert">
-                  {error}
-                </p>
+                <div className="text-sm text-red-600" role="alert">
+                  <p>{error}</p>
+                  {noAccount && (
+                    <Link
+                      href="/register"
+                      className="mt-1 inline-block font-semibold text-[var(--color-primary)] underline hover:text-[var(--color-accent-dark)]"
+                    >
+                      Create an account
+                    </Link>
+                  )}
+                </div>
               )}
 
               <button

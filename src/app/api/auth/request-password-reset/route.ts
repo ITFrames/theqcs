@@ -1,16 +1,42 @@
 import { NextResponse } from "next/server";
 import { db, generateOtpCode, OTP_TTL_MS } from "@/lib/db";
 import { sendOtpEmail } from "@/lib/mailer";
+import { rateLimit } from "@/lib/botProtection";
+import { isSameOrigin } from "@/lib/csrf";
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+function clientIp(request: Request): string {
+  const xff = request.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
+
 /**
  * POST /api/auth/request-password-reset
- * Issues a password-reset OTP (60s expiry). Anti-enumeration: always responds
- * with the same success message whether or not the email is registered, so an
- * attacker can't discover which emails have accounts.
+ * Issues a password-reset OTP (60s expiry). This endpoint reports explicitly
+ * when no account exists (product decision) — rate limiting below mitigates
+ * the resulting email-enumeration abuse.
  */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
+
+  // Rate limit per IP: this endpoint reveals account existence, so cap how fast
+  // someone can probe addresses.
+  const ip = clientIp(request);
+  const limit = rateLimit(`pwreset:${ip}`, 5, 60_000);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment and try again." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfterSeconds) },
+      },
+    );
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();
@@ -26,17 +52,20 @@ export async function POST(request: Request) {
     );
   }
 
-  const genericOk = {
-    ok: true,
-    message: "If an account exists for that email, we've sent a reset code.",
-    expiresInSeconds: OTP_TTL_MS / 1000,
-  };
-
   try {
     const user = await db.findUserByEmail(email);
-    // Only send if the account exists — but never reveal that to the client.
+    // Per product decision: tell the user explicitly when no account exists so
+    // they can register instead. (Trade-off: this allows email enumeration;
+    // rate limiting on this endpoint mitigates bulk abuse.)
     if (!user) {
-      return NextResponse.json(genericOk);
+      return NextResponse.json(
+        {
+          error: "no_account",
+          message:
+            "No account found with that email. Please check the address or create a new account.",
+        },
+        { status: 404 },
+      );
     }
 
     const code = generateOtpCode();
@@ -53,12 +82,16 @@ export async function POST(request: Request) {
       delivery.devFallback && process.env.NODE_ENV !== "production";
 
     return NextResponse.json({
-      ...genericOk,
+      ok: true,
+      message: "We've sent a password reset code to your email.",
+      expiresInSeconds: OTP_TTL_MS / 1000,
       ...(exposeCode ? { devOtp: code } : {}),
     });
   } catch (err) {
     console.error("[qcs] request-password-reset failed:", err);
-    // Still return generic success to avoid leaking anything.
-    return NextResponse.json(genericOk);
+    return NextResponse.json(
+      { error: "We couldn't process your request. Please try again." },
+      { status: 500 },
+    );
   }
 }

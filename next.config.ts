@@ -16,6 +16,8 @@ import type { NextConfig } from "next";
  * for script-src. For a stricter nonce-based CSP we'd wire a nonce through a
  * middleware; this static policy is a strong, low-risk baseline.
  */
+const isDev = process.env.NODE_ENV !== "production";
+
 const csp = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -25,7 +27,10 @@ const csp = [
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
-  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://www.instagram.com https://*.instagram.com https://va.vercel-scripts.com",
+  // React dev mode requires eval() for debugging features (Turbopack HMR,
+  // callstack reconstruction). It is dev-only — React never uses eval() in
+  // production, so 'unsafe-eval' is added only when NODE_ENV !== production.
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://challenges.cloudflare.com https://www.instagram.com https://*.instagram.com https://va.vercel-scripts.com`,
   "frame-src https://challenges.cloudflare.com https://www.instagram.com https://*.instagram.com",
   "connect-src 'self' https://*.supabase.co https://challenges.cloudflare.com https://api.resend.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
   "upgrade-insecure-requests",
