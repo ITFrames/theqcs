@@ -1,11 +1,19 @@
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/mailer";
 import { rateLimit, verifyTurnstile } from "@/lib/botProtection";
+import { emailLayout } from "@/lib/emailLayout";
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** Where contact submissions are delivered. */
+/**
+ * Where contact submissions are delivered. Primary inbox (overridable via
+ * CONTACT_TO_EMAIL) plus a fixed Gmail copy so nothing is missed.
+ */
 const CONTACT_INBOX = process.env.CONTACT_TO_EMAIL || "contact@theqcs.ca";
+const CONTACT_GMAIL = "qcsaborad@gmail.com";
+const CONTACT_RECIPIENTS = Array.from(
+  new Set([CONTACT_INBOX, CONTACT_GMAIL]),
+);
 
 function escapeHtml(s: string): string {
   return s
@@ -105,21 +113,26 @@ export async function POST(request: Request) {
   }
 
   // Deliver.
-  const html = `
-    <div style="font-family:Inter,Arial,sans-serif;max-width:560px;color:#1a1a2e">
-      <h2 style="color:#1e3a5f;margin:0 0 12px">New contact enquiry</h2>
-      <p style="margin:4px 0"><strong>Name:</strong> ${escapeHtml(fullName)}</p>
-      <p style="margin:4px 0"><strong>Email:</strong> ${escapeHtml(email)}</p>
-      <p style="margin:4px 0"><strong>Phone:</strong> ${escapeHtml(phone) || "—"}</p>
-      <p style="margin:4px 0"><strong>Service:</strong> ${escapeHtml(service)}</p>
-      <p style="margin:12px 0 4px"><strong>Message:</strong></p>
-      <p style="white-space:pre-line;background:#f1f3f5;border-radius:8px;padding:12px;margin:0">${escapeHtml(
-        message,
-      )}</p>
-    </div>`;
+  const emailBody = `
+    <h2 style="color:#1e3a5f;margin:0 0 4px;font-size:20px;">New contact enquiry</h2>
+    <p style="color:#718096;margin:0 0 18px;font-size:13px;">A visitor submitted the contact form on theqcs.ca.</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+      <tr><td style="padding:6px 0;color:#718096;width:110px;">Name</td><td style="padding:6px 0;font-weight:600;">${escapeHtml(fullName)}</td></tr>
+      <tr><td style="padding:6px 0;color:#718096;">Email</td><td style="padding:6px 0;"><a href="mailto:${escapeHtml(email)}" style="color:#1e3a5f;">${escapeHtml(email)}</a></td></tr>
+      <tr><td style="padding:6px 0;color:#718096;">Phone</td><td style="padding:6px 0;">${escapeHtml(phone) || "—"}</td></tr>
+      <tr><td style="padding:6px 0;color:#718096;">Service</td><td style="padding:6px 0;">${escapeHtml(service)}</td></tr>
+    </table>
+    <p style="margin:16px 0 6px;font-weight:600;color:#1a1a2e;font-size:14px;">Message</p>
+    <div style="white-space:pre-line;background:#f1f3f5;border-radius:8px;padding:14px;font-size:14px;line-height:1.6;">${escapeHtml(
+      message,
+    )}</div>`;
+
+  const html = emailLayout(emailBody, {
+    preheader: `New enquiry from ${fullName} — ${service}`,
+  });
 
   const result = await sendEmail({
-    to: CONTACT_INBOX,
+    to: CONTACT_RECIPIENTS,
     subject: `New enquiry from ${fullName} — ${service}`,
     html,
     replyTo: email,

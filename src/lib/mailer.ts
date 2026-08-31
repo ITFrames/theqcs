@@ -14,8 +14,11 @@
  * to also surface the code to the client (only outside production).
  */
 
+import { emailLayout } from "./emailLayout";
+
 const FROM_EMAIL = process.env.OTP_FROM_EMAIL || "no-reply@theqcs.ca";
 const FROM_NAME = "QCS ABROAD";
+
 
 export interface SendOtpResult {
   /** true when the code was actually dispatched to a provider. */
@@ -28,21 +31,19 @@ export interface SendOtpResult {
 function otpEmailHtml(code: string, purpose: "register" | "login"): string {
   const heading =
     purpose === "register" ? "Verify your email" : "Sign-in verification";
-  return `
-  <div style="font-family:Inter,Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#1a1a2e">
-    <h1 style="font-size:20px;color:#1e3a5f;margin:0 0 4px">QCS ABROAD</h1>
-    <p style="font-size:15px;color:#4a5568;margin:0 0 20px">${heading}</p>
-    <p style="font-size:14px;color:#4a5568;margin:0 0 12px">
+  const body = `
+    <h2 style="font-size:20px;color:#1e3a5f;margin:0 0 4px">${heading}</h2>
+    <p style="font-size:14px;color:#4a5568;margin:0 0 16px;line-height:1.6">
       Use the code below to continue. It expires in <strong>60 seconds</strong>.
     </p>
     <div style="font-size:32px;font-weight:700;letter-spacing:8px;color:#1e3a5f;
-                background:#f1f3f5;border-radius:10px;padding:16px;text-align:center;margin:0 0 20px">
+                background:#f1f3f5;border-radius:10px;padding:16px;text-align:center;margin:0 0 16px">
       ${code}
     </div>
     <p style="font-size:12px;color:#718096;margin:0">
       If you didn't request this, you can safely ignore this email.
-    </p>
-  </div>`;
+    </p>`;
+  return emailLayout(body, { preheader: `Your QCS ABROAD code: ${code}` });
 }
 
 /**
@@ -109,7 +110,7 @@ export interface SendEmailResult {
  * dev when no provider is configured. Never throws.
  */
 export async function sendEmail(input: {
-  to: string;
+  to: string | string[];
   subject: string;
   html: string;
   /** Optional Reply-To (e.g. the person who submitted the contact form). */
@@ -117,10 +118,11 @@ export async function sendEmail(input: {
 }): Promise<SendEmailResult> {
   const provider = (process.env.OTP_DELIVERY_PROVIDER || "").toLowerCase();
   const apiKey = process.env.RESEND_API_KEY;
+  const recipients = Array.isArray(input.to) ? input.to : [input.to];
 
   if (provider !== "resend" || !apiKey) {
     console.log(
-      `[qcs] (dev) email to ${input.to} — subject: ${input.subject}` +
+      `[qcs] (dev) email to ${recipients.join(", ")} — subject: ${input.subject}` +
         (input.replyTo ? ` (reply-to: ${input.replyTo})` : ""),
     );
     return { delivered: false, devFallback: true };
@@ -135,7 +137,7 @@ export async function sendEmail(input: {
       },
       body: JSON.stringify({
         from: `${FROM_NAME} <${FROM_EMAIL}>`,
-        to: [input.to],
+        to: recipients,
         subject: input.subject,
         html: input.html,
         ...(input.replyTo ? { reply_to: input.replyTo } : {}),
