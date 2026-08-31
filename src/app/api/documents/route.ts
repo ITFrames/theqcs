@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
+import { isSameOrigin } from "@/lib/csrf";
 import type { DocumentStatus } from "@/lib/types";
 import { validateUpload } from "@/lib/uploadConstraints";
 import { createSignedUpload, deleteFile, storagePath } from "@/lib/storage";
@@ -21,6 +22,9 @@ export async function GET() {
  * fileSize, fileType }. Validates the PDF/4MB policy first.
  */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
@@ -92,6 +96,9 @@ export async function POST(request: Request) {
  * metadata only.)
  */
 export async function PATCH(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
@@ -145,6 +152,9 @@ export async function PATCH(request: Request) {
  * and marks the document "Not Uploaded".
  */
 export async function DELETE(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });

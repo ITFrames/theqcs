@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
+import { isSameOrigin } from "@/lib/csrf";
 import type { StudentProfile } from "@/lib/types";
 
 /** GET /api/profile — current student's profile. */
@@ -18,6 +19,10 @@ export async function GET() {
  * Pass `onboardingComplete: true` on the final step.
  */
 export async function PATCH(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
+
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });

@@ -2,6 +2,15 @@ import { NextResponse } from "next/server";
 import { db, generateOtpCode, OTP_TTL_MS } from "@/lib/db";
 import { sendOtpEmail } from "@/lib/mailer";
 import { validateRegistration, hasErrors } from "@/lib/validation";
+import { rateLimit } from "@/lib/botProtection";
+import { isSameOrigin } from "@/lib/csrf";
+import { checkEmailDeliverability } from "@/lib/emailQuality";
+
+function clientIp(request: Request): string {
+  const xff = request.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
 
 /**
  * POST /api/auth/register
@@ -9,6 +18,22 @@ import { validateRegistration, hasErrors } from "@/lib/validation";
  * The account exists but email stays unverified until /verify-otp succeeds.
  */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
+
+  const ip = clientIp(request);
+  const limit = rateLimit(`register:${ip}`, 5, 60_000);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Too many attempts. Please try again shortly." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfterSeconds) },
+      },
+    );
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();
@@ -46,6 +71,24 @@ export async function POST(request: Request) {
       "Please check the details you entered.";
     return NextResponse.json(
       { error: firstMessage, fieldErrors },
+      { status: 400 },
+    );
+  }
+
+  // Bounce control (registration only): reject disposable/temporary domains,
+  // previously-bounced (suppressed) addresses, and domains with no mail server
+  // (typos / made-up domains) BEFORE we send an OTP. This protects sender
+  // reputation and blocks abuse via fake emails. Forgot-password doesn't need
+  // this — it only mails addresses already registered & verified.
+  const deliverability = await checkEmailDeliverability(email, {
+    checkMx: true,
+  });
+  if (!deliverability.ok) {
+    return NextResponse.json(
+      {
+        error: deliverability.message ?? "Please use a valid, permanent email.",
+        fieldErrors: { email: deliverability.message },
+      },
       { status: 400 },
     );
   }

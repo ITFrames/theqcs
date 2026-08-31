@@ -26,7 +26,6 @@ import {
 import {
   COUNTRY_QUESTIONS,
   scoreCountries,
-  COUNTRIES,
   type CountryResult,
 } from "@/data/countryMatcher";
 import {

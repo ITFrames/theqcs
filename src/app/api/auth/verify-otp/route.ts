@@ -2,8 +2,16 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { setSessionCookie } from "@/lib/session";
 import { sendWelcomeEmail } from "@/lib/mailer";
+import { rateLimit } from "@/lib/botProtection";
+import { isSameOrigin } from "@/lib/csrf";
 
 const MAX_ATTEMPTS = 5;
+
+function clientIp(request: Request): string {
+  const xff = request.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
 
 /**
  * POST /api/auth/verify-otp
@@ -11,6 +19,23 @@ const MAX_ATTEMPTS = 5;
  * a max attempt count. On success: marks the email verified and opens a session.
  */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
+
+  // Per-IP throttle on top of the per-code attempt counter below.
+  const ip = clientIp(request);
+  const limit = rateLimit(`verify:${ip}`, 15, 60_000);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Too many attempts. Please try again shortly." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfterSeconds) },
+      },
+    );
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();

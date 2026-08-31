@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
 import { db, generateOtpCode, OTP_TTL_MS, verifyPassword } from "@/lib/db";
 import { sendOtpEmail } from "@/lib/mailer";
+import { rateLimit } from "@/lib/botProtection";
+import { isSameOrigin } from "@/lib/csrf";
+
+function clientIp(request: Request): string {
+  const xff = request.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
 
 /**
  * POST /api/auth/login
@@ -8,6 +16,23 @@ import { sendOtpEmail } from "@/lib/mailer";
  * The session is only created after /verify-otp succeeds.
  */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
+
+  // Throttle password attempts per IP to blunt brute-force / credential stuffing.
+  const ip = clientIp(request);
+  const limit = rateLimit(`login:${ip}`, 8, 60_000);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Too many attempts. Please try again shortly." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(limit.retryAfterSeconds) },
+      },
+    );
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();

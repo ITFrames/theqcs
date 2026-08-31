@@ -133,6 +133,15 @@ create table if not exists sessions (
 alter table sessions add column if not exists user_id uuid references users(id) on delete cascade;
 alter table sessions add column if not exists created_at timestamptz not null default now();
 
+-- ---------------------------------------------------------------------------
+-- email_suppressions
+-- ---------------------------------------------------------------------------
+create table if not exists email_suppressions (
+  email text primary key
+);
+alter table email_suppressions add column if not exists reason text;
+alter table email_suppressions add column if not exists created_at timestamptz not null default now();
+
 -- ===========================================================================
 -- Done. This migration is idempotent — running it again is a no-op for
 -- anything that already exists.
