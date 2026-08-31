@@ -30,8 +30,8 @@ import SuccessStories from "@/components/SuccessStories";
 import Image from "next/image";
 
 const stats = [
-  { icon: Users, value: "500+", label: "Students Placed" },
-  { icon: Building2, value: "50+", label: "University Partners" },
+  { icon: Users, value: "200+", label: "Students Placed" },
+  { icon: Building2, value: "300+", label: "University Partners" },
   { icon: Globe, value: "15+", label: "Countries" },
   { icon: ShieldCheck, value: "98%", label: "Visa Success Rate" },
 ];
@@ -136,7 +136,7 @@ const differentiators = [
     icon: CheckCircle2,
     title: "Proven Track Record",
     description:
-      "With a 98% visa success rate and 500+ successful placements, our results speak for themselves. Your success is our reputation.",
+      "With a 98% visa success rate and 200+ successful placements, our results speak for themselves. Your success is our reputation.",
   },
   {
     icon: Clock,
@@ -148,7 +148,7 @@ const differentiators = [
     icon: Globe,
     title: "Global Network",
     description:
-      "Our partnerships with 50+ universities across 15+ countries give you access to opportunities that others simply cannot offer.",
+      "Our partnerships with 300+ universities across 15+ countries give you access to opportunities that others simply cannot offer.",
   },
 ];
 

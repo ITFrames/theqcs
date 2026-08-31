@@ -46,7 +46,7 @@ const values = [
 ];
 
 const stats = [
-  { value: "500+", label: "Students Guided", icon: GraduationCap },
+  { value: "200+", label: "Students Guided", icon: GraduationCap },
   { value: "15+", label: "Destination Countries", icon: Globe },
   { value: "98%", label: "Visa Success Rate", icon: Trophy },
   { value: "Since 2021", label: "Trusted & Growing", icon: Users },
