@@ -9,7 +9,6 @@ import {
   Building2,
   Globe,
   ShieldCheck,
-  Star,
   CheckCircle2,
   Clock,
   Target,
@@ -150,33 +149,6 @@ const differentiators = [
     title: "Global Network",
     description:
       "Our partnerships with 50+ universities across 15+ countries give you access to opportunities that others simply cannot offer.",
-  },
-];
-
-const testimonials = [
-  {
-    name: "Priya Sharma",
-    university: "University of Toronto",
-    country: "Canada",
-    rating: 5,
-    quote:
-      "QCS ABROAD made my dream of studying in Canada a reality. Their counselors were incredibly knowledgeable about the Canadian admission process and helped me secure a scholarship I didn't even know I qualified for. I can't thank them enough.",
-  },
-  {
-    name: "Ahmed Hassan",
-    university: "University of Melbourne",
-    country: "Australia",
-    rating: 5,
-    quote:
-      "I was overwhelmed by the visa process, but the team at QCS handled everything with such professionalism. From document preparation to interview coaching, they were there every step of the way. Truly a world-class service.",
-  },
-  {
-    name: "Maria Santos",
-    university: "University College London",
-    country: "United Kingdom",
-    rating: 5,
-    quote:
-      "The personalized attention I received was remarkable. My counselor understood my career goals and matched me with the perfect program. The pre-departure briefing also helped me feel confident about moving to London.",
   },
 ];
 
@@ -508,63 +480,6 @@ export default function Home() {
 
       {/* Instagram Success Stories (consent-gated) */}
       <SuccessStories />
-
-      {/* Testimonials */}
-      <section
-        className="section-padding bg-background-alt"
-        aria-labelledby="testimonials-heading"
-      >
-        <div className="container-narrow">
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="text-accent mb-2 text-sm font-semibold tracking-widest uppercase">
-              Student Stories
-            </p>
-            <h2
-              id="testimonials-heading"
-              className="text-primary text-3xl font-bold md:text-4xl"
-            >
-              What Our Students Say
-            </h2>
-            <p className="text-foreground-muted mt-4">
-              Hear from students who turned their study abroad dreams into
-              reality with our guidance.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {testimonials.map((testimonial) => (
-              <blockquote
-                key={testimonial.name}
-                className="border-border-light flex flex-col rounded-xl border bg-white p-6 shadow-[var(--shadow-sm)]"
-              >
-                <div
-                  className="mb-3 flex gap-0.5"
-                  aria-label={`${testimonial.rating} out of 5 stars`}
-                >
-                  {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-4 w-4 fill-[#d4a853] text-[#d4a853]"
-                      aria-hidden="true"
-                    />
-                  ))}
-                </div>
-                <p className="text-foreground-muted flex-1 text-sm leading-relaxed italic">
-                  &ldquo;{testimonial.quote}&rdquo;
-                </p>
-                <footer className="border-border-light mt-4 border-t pt-4">
-                  <p className="text-primary font-semibold">
-                    {testimonial.name}
-                  </p>
-                  <p className="text-foreground-subtle text-xs">
-                    {testimonial.university} &middot; {testimonial.country}
-                  </p>
-                </footer>
-              </blockquote>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Bottom CTA */}
       <section
