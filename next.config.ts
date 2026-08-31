@@ -25,6 +25,17 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      // Known short/share links (e.g. printed on flyers, QR codes, IG bio) that
+      // aren't real pages — send them somewhere useful instead of a 404.
+      // These are explicit, intentional redirects (not a catch-all, which would
+      // hurt SEO). Add more aliases here as needed.
+      { source: "/get-social", destination: "/#success-stories", permanent: false },
+      { source: "/social", destination: "/#success-stories", permanent: false },
+      { source: "/home", destination: "/", permanent: false },
+    ];
+  },
   async headers() {
     return [
       // Security headers on everything.
