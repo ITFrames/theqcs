@@ -31,7 +31,7 @@ export { hashPassword, verifyPassword };
 /* OTP                                                                        */
 /* -------------------------------------------------------------------------- */
 
-export const OTP_TTL_MS = 60_000; // 60 second expiry, per requirements.
+export const OTP_TTL_MS = 5 * 60_000; // 5 minute expiry.
 
 export function generateOtpCode(): string {
   return String(randomInt(0, 1_000_000)).padStart(6, "0");

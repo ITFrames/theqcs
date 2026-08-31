@@ -15,11 +15,11 @@ const LOGO_URL = `${APP_URL}/QCSLOGO.png`;
 const NAVY = "#1e3a5f";
 const GOLD = "#d4a853";
 
-const SOCIALS: { label: string; href: string; icon: string }[] = [
-  { label: "Instagram", href: "https://www.instagram.com/qcsabroad", icon: "📷" },
-  { label: "Facebook", href: "https://www.facebook.com/qcsabroad", icon: "📘" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/qcsabroad", icon: "💼" },
-  { label: "X", href: "https://x.com/qcsabroad", icon: "✖️" },
+const SOCIALS: { label: string; href: string }[] = [
+  { label: "Instagram", href: "https://www.instagram.com/qcsabroad" },
+  { label: "Facebook", href: "https://www.facebook.com/qcsabroad" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/qcsabroad" },
+  { label: "X", href: "https://x.com/qcsabroad" },
 ];
 
 export function emailLayout(
@@ -81,7 +81,7 @@ export function emailLayout(
                   <td align="center" style="padding-bottom:12px;">
                     ${SOCIALS.map(
                       (s) =>
-                        `<a href="${s.href}" style="text-decoration:none;font-size:18px;margin:0 6px;" title="${s.label}">${s.icon}</a>`,
+                        `<a href="${s.href}" title="${s.label}" style="display:inline-block;text-decoration:none;font-size:12px;font-weight:600;color:#ffffff;background:${NAVY};border-radius:999px;padding:6px 14px;margin:0 4px;">${s.label}</a>`,
                     ).join("")}
                   </td>
                 </tr>

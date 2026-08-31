@@ -24,7 +24,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [otpError, setOtpError] = useState<string | null>(null);
   const [devOtp, setDevOtp] = useState<string | undefined>();
-  const [expiresIn, setExpiresIn] = useState(60);
+  const [expiresIn, setExpiresIn] = useState(300);
   const [issuedAt, setIssuedAt] = useState(0);
 
   const submitCredentials = async (e: React.FormEvent) => {
@@ -43,7 +43,7 @@ export default function LoginPage() {
         return;
       }
       setDevOtp(data.devOtp);
-      setExpiresIn(data.expiresInSeconds ?? 60);
+      setExpiresIn(data.expiresInSeconds ?? 300);
       setIssuedAt(Date.now());
       setStep("otp");
     } catch {
@@ -87,7 +87,7 @@ export default function LoginPage() {
       const data = await res.json();
       if (res.ok) {
         setDevOtp(data.devOtp);
-        setExpiresIn(data.expiresInSeconds ?? 60);
+        setExpiresIn(data.expiresInSeconds ?? 300);
         setIssuedAt(Date.now());
       } else {
         setOtpError(data.error ?? "Could not resend code.");

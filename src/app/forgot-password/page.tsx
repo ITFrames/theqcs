@@ -18,7 +18,7 @@ export default function ForgotPasswordPage() {
   const [noAccount, setNoAccount] = useState(false);
   const [otpError, setOtpError] = useState<string | null>(null);
   const [devOtp, setDevOtp] = useState<string | undefined>();
-  const [expiresIn, setExpiresIn] = useState(60);
+  const [expiresIn, setExpiresIn] = useState(300);
   const [issuedAt, setIssuedAt] = useState(0);
 
   const requestReset = async (e: React.FormEvent) => {
@@ -39,7 +39,7 @@ export default function ForgotPasswordPage() {
         return;
       }
       setDevOtp(data.devOtp);
-      setExpiresIn(data.expiresInSeconds ?? 60);
+      setExpiresIn(data.expiresInSeconds ?? 300);
       setIssuedAt(Date.now());
       setStep("reset");
     } catch {
@@ -88,7 +88,7 @@ export default function ForgotPasswordPage() {
       const data = await res.json();
       if (res.ok) {
         setDevOtp(data.devOtp);
-        setExpiresIn(data.expiresInSeconds ?? 60);
+        setExpiresIn(data.expiresInSeconds ?? 300);
         setIssuedAt(Date.now());
       } else {
         setOtpError(data.error ?? "Could not resend code.");

@@ -41,7 +41,7 @@ function otpEmailHtml(
   const body = `
     <h2 style="font-size:20px;color:#1e3a5f;margin:0 0 4px">${heading}</h2>
     <p style="font-size:14px;color:#4a5568;margin:0 0 16px;line-height:1.6">
-      Use the code below to continue. It expires in <strong>60 seconds</strong>.
+      Use the code below to continue. It expires in <strong>5 minutes</strong>.
     </p>
     <div style="font-size:32px;font-weight:700;letter-spacing:8px;color:#1e3a5f;
                 background:#f1f3f5;border-radius:10px;padding:16px;text-align:center;margin:0 0 16px">

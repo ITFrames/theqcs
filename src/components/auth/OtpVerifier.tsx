@@ -28,7 +28,7 @@ interface OtpVerifierProps {
  */
 export default function OtpVerifier({
   email,
-  initialSeconds = 60,
+  initialSeconds = 300,
   issuedAt,
   devOtp,
   submitting = false,
@@ -64,6 +64,11 @@ export default function OtpVerifier({
 
   const expired = seconds <= 0;
   const code = digits.join("");
+  // Display as m:ss when over a minute, otherwise "NNs".
+  const countdown =
+    seconds >= 60
+      ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`
+      : `${seconds}s`;
 
   const setDigit = (index: number, value: string) => {
     const clean = value.replace(/\D/g, "");
@@ -149,7 +154,7 @@ export default function OtpVerifier({
           <span>
             Code expires in{" "}
             <span className="font-semibold text-[var(--color-foreground)] tabular-nums">
-              {seconds}s
+              {countdown}
             </span>
           </span>
         )}
