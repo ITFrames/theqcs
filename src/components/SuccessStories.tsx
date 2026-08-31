@@ -16,15 +16,22 @@
  *   with the student's consent) should be used here.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { Instagram, Sparkles, ShieldCheck } from "lucide-react";
 import { useConsent } from "@/components/consent/ConsentProvider";
 
-// Replace these placeholder permalinks with your real Instagram post URLs.
+// Real QCS ABROAD Instagram posts (permalinks; tracking params stripped).
 const POSTS: string[] = [
-  "https://www.instagram.com/p/PLACEHOLDER1/",
-  "https://www.instagram.com/p/PLACEHOLDER2/",
-  "https://www.instagram.com/p/PLACEHOLDER3/",
+  "https://www.instagram.com/p/C1Ugw-pvk5G/",
+  "https://www.instagram.com/p/C1R8BDKp3BV/",
+  "https://www.instagram.com/p/C0O8lhbtHE_/",
+  "https://www.instagram.com/p/C0O8f7-tzJh/",
+  "https://www.instagram.com/p/C0O8Yertj-1/",
+  "https://www.instagram.com/p/CxtTguvNc33/",
+  "https://www.instagram.com/p/CxswbyFtGVD/",
+  "https://www.instagram.com/p/CwECZM4NbAl/",
+  "https://www.instagram.com/p/CwEBzIvNBfU/",
+  "https://www.instagram.com/p/Cv7PNDGNTjH/",
 ];
 
 const INSTAGRAM_PROFILE = "https://www.instagram.com/qcsabroad";
@@ -37,8 +44,15 @@ declare global {
 
 export default function SuccessStories() {
   const { consent, openPreferences } = useConsent();
-  const allowed = consent.marketing;
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Consent is read from a cookie, which is unavailable during SSR. To avoid a
+  // hydration mismatch (server always sees "not consented", client may see
+  // "consented"), we only trust the consent value AFTER mount. Server render
+  // and first client render therefore both show the fallback, then the client
+  // upgrades to the embeds if marketing consent is present.
+  const mounted = useMounted();
+  const allowed = mounted && consent.marketing;
 
   // Load the Instagram embed script (and process embeds) once marketing
   // consent is granted. All state changes happen in async callbacks / event
@@ -89,6 +103,17 @@ export default function SuccessStories() {
             Instagram. Follow along as they head off to universities around the
             world.
           </p>
+
+          {/* Follow us on Instagram */}
+          <a
+            href={INSTAGRAM_PROFILE}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-transform hover:-translate-y-0.5 hover:shadow-lg"
+          >
+            <Instagram className="h-4.5 w-4.5" aria-hidden="true" />
+            Follow us @qcsabroad
+          </a>
         </div>
 
         {allowed ? (
@@ -158,5 +183,15 @@ export default function SuccessStories() {
         )}
       </div>
     </section>
+  );
+}
+
+const noopSubscribe = () => () => {};
+/** false during SSR + first paint, true after client mount — no setState. */
+function useMounted() {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
   );
 }
