@@ -31,8 +31,8 @@ const nextConfig: NextConfig = {
       // aren't real pages — send them somewhere useful instead of a 404.
       // These are explicit, intentional redirects (not a catch-all, which would
       // hurt SEO). Add more aliases here as needed.
-      { source: "/get-social", destination: "/#success-stories", permanent: false },
-      { source: "/social", destination: "/#success-stories", permanent: false },
+      { source: "/get-social", destination: "/contact", permanent: false },
+      { source: "/social", destination: "/contact", permanent: false },
       { source: "/home", destination: "/", permanent: false },
     ];
   },
