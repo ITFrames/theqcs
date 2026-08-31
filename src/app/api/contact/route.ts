@@ -10,7 +10,7 @@ const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  * CONTACT_TO_EMAIL) plus a fixed Gmail copy so nothing is missed.
  */
 const CONTACT_INBOX = process.env.CONTACT_TO_EMAIL || "contact@theqcs.ca";
-const CONTACT_GMAIL = "qcsaborad@gmail.com";
+const CONTACT_GMAIL = "qcsabroad@gmail.com";
 const CONTACT_RECIPIENTS = Array.from(
   new Set([CONTACT_INBOX, CONTACT_GMAIL]),
 );
