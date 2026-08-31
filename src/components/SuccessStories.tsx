@@ -21,6 +21,7 @@ import { Instagram, Sparkles, ShieldCheck } from "lucide-react";
 import { useConsent } from "@/components/consent/ConsentProvider";
 
 // Real QCS ABROAD Instagram posts (permalinks; tracking params stripped).
+// Nine posts → a clean 3×3 grid. "See more" links out to the full profile.
 const POSTS: string[] = [
   "https://www.instagram.com/p/C1Ugw-pvk5G/",
   "https://www.instagram.com/p/C1R8BDKp3BV/",
@@ -31,7 +32,6 @@ const POSTS: string[] = [
   "https://www.instagram.com/p/CxswbyFtGVD/",
   "https://www.instagram.com/p/CwECZM4NbAl/",
   "https://www.instagram.com/p/CwEBzIvNBfU/",
-  "https://www.instagram.com/p/Cv7PNDGNTjH/",
 ];
 
 const INSTAGRAM_PROFILE = "https://www.instagram.com/qcsabroad";
@@ -103,20 +103,10 @@ export default function SuccessStories() {
             Instagram. Follow along as they head off to universities around the
             world.
           </p>
-
-          {/* Follow us on Instagram */}
-          <a
-            href={INSTAGRAM_PROFILE}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-transform hover:-translate-y-0.5 hover:shadow-lg"
-          >
-            <Instagram className="h-4.5 w-4.5" aria-hidden="true" />
-            Follow us @qcsabroad
-          </a>
         </div>
 
         {allowed ? (
+          <>
           <div
             ref={containerRef}
             className="mx-auto mt-10 grid max-w-5xl gap-6 md:grid-cols-2 lg:grid-cols-3"
@@ -143,7 +133,19 @@ export default function SuccessStories() {
                 </a>
               </blockquote>
             ))}
-          </div>
+            </div>
+            <div className="mt-10 text-center">
+              <a
+                href={INSTAGRAM_PROFILE}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] px-7 py-3 text-sm font-semibold text-white shadow-md transition-transform hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <Instagram className="h-4.5 w-4.5" aria-hidden="true" />
+                See more on Instagram
+              </a>
+            </div>
+          </>
         ) : (
           /* Consent fallback — no third-party script loaded yet. */
           <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-[var(--color-border-light)] bg-[var(--color-background-alt)] p-8 text-center">
