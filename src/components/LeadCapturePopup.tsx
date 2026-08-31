@@ -25,7 +25,7 @@ import {
   isLeadDismissed,
 } from "@/lib/lead";
 
-const IDLE_MS = 25_000;
+const IDLE_MS = 15_000;
 // Don't interrupt these flows.
 const SUPPRESSED_PREFIXES = [
   "/login",
