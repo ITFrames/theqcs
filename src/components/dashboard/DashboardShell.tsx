@@ -11,20 +11,25 @@ import {
   GraduationCap,
   Menu,
   X,
+  UserCircle,
+  AlertTriangle,
 } from "lucide-react";
 import type { PublicUser } from "@/lib/types";
 
 const NAV = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
+  { href: "/dashboard/profile", label: "My Profile", icon: UserCircle },
   { href: "/dashboard/programs", label: "Explore Programs", icon: Compass },
   { href: "/dashboard/documents", label: "Documents", icon: FolderOpen },
 ];
 
 export default function DashboardShell({
   user,
+  profileComplete = true,
   children,
 }: {
   user: PublicUser;
+  profileComplete?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -116,6 +121,23 @@ export default function DashboardShell({
 
         {/* Main content */}
         <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+          {!profileComplete && (
+            <Link
+              href="/dashboard/profile"
+              className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 transition-colors hover:bg-amber-100"
+            >
+              <span className="flex items-center gap-2.5">
+                <AlertTriangle className="h-5 w-5 shrink-0 text-amber-600" />
+                <span className="text-sm font-medium text-amber-800">
+                  Your profile is incomplete. Complete it so we can tailor
+                  recommendations to your goals.
+                </span>
+              </span>
+              <span className="hidden shrink-0 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white sm:inline-block">
+                Complete profile
+              </span>
+            </Link>
+          )}
           {children}
         </main>
       </div>

@@ -77,9 +77,9 @@ export function computeNextAction(
     return {
       title: "Complete your profile",
       description:
-        "Finish the quick onboarding so your counsellor can recommend the best-fit universities.",
-      cta: "Continue Onboarding",
-      href: "/onboarding",
+        "Fill in your profile so your counsellor can recommend the best-fit universities.",
+      cta: "Complete Profile",
+      href: "/dashboard/profile",
     };
   }
 
