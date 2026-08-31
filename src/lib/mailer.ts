@@ -155,3 +155,65 @@ export async function sendEmail(input: {
     return { delivered: false, devFallback: false, error: "network_error" };
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* Welcome email (sent once after a student verifies registration)            */
+/* -------------------------------------------------------------------------- */
+
+const APP_URL = (
+  process.env.NEXT_PUBLIC_APP_URL || "https://www.theqcs.ca"
+).replace(/\/$/, "");
+
+/**
+ * Sends a friendly welcome email after a student's account is verified.
+ * Fire-and-forget from the caller — never blocks the signup flow.
+ */
+export async function sendWelcomeEmail(
+  to: string,
+  firstName: string,
+): Promise<SendEmailResult> {
+  const name = firstName?.trim() || "there";
+  const body = `
+    <h2 style="font-size:22px;color:#1e3a5f;margin:0 0 6px;">Welcome to QCS ABROAD, ${escapeHtmlText(
+      name,
+    )}! 🎉</h2>
+    <p style="font-size:14px;color:#4a5568;line-height:1.7;margin:0 0 16px;">
+      Your account is verified and you&apos;re all set to begin your study
+      abroad journey. We&apos;re thrilled to help you find the right university,
+      navigate admissions and visas, and get you ready to go.
+    </p>
+    <p style="font-size:14px;color:#1a1a2e;font-weight:600;margin:0 0 8px;">What&apos;s next?</p>
+    <ul style="font-size:14px;color:#4a5568;line-height:1.7;margin:0 0 20px;padding-left:18px;">
+      <li>Complete your profile so we can tailor recommendations to your goals.</li>
+      <li>Explore programs and shortlist your favourites.</li>
+      <li>Upload your documents — your counsellor will take it from there.</li>
+    </ul>
+    <p style="margin:0 0 24px;">
+      <a href="${APP_URL}/dashboard"
+        style="display:inline-block;background:#1e3a5f;color:#ffffff;text-decoration:none;
+               font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;">
+        Go to your dashboard
+      </a>
+    </p>
+    <p style="font-size:13px;color:#718096;line-height:1.6;margin:0;">
+      Questions? Just reply to this email or reach us at
+      <a href="mailto:contact@theqcs.ca" style="color:#1e3a5f;">contact@theqcs.ca</a>.
+      We&apos;re here to help. 🌍
+    </p>`;
+
+  return sendEmail({
+    to,
+    subject: "Welcome to QCS ABROAD — your journey starts here 🎓",
+    html: emailLayout(body, {
+      preheader: "Your account is verified — here's how to get started.",
+    }),
+  });
+}
+
+/** Minimal HTML-escape for interpolated user text in emails. */
+function escapeHtmlText(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}

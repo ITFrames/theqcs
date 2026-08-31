@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { setSessionCookie } from "@/lib/session";
+import { sendWelcomeEmail } from "@/lib/mailer";
 
 const MAX_ATTEMPTS = 5;
 
@@ -80,6 +81,14 @@ export async function POST(request: Request) {
 
     await setSessionCookie(user.id);
     const profile = await db.getProfile(user.id);
+
+    // Send a one-time welcome email after registration is verified.
+    // Fire-and-forget: a mail hiccup must never block sign-up completion.
+    if (purpose === "register") {
+      sendWelcomeEmail(user.email, user.firstName).catch((err) =>
+        console.error("[qcs] welcome email failed:", err),
+      );
+    }
 
     return NextResponse.json({
       ok: true,
