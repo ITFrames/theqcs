@@ -15,7 +15,7 @@ create table if not exists users (
 
 create table if not exists otps (
   email text not null,
-  purpose text not null check (purpose in ('register','login')),
+  purpose text not null check (purpose in ('register','login','reset')),
   code text not null,
   expires_at timestamptz not null,
   attempts int not null default 0,
@@ -88,6 +88,14 @@ create table if not exists shortlist (
 create table if not exists sessions (
   token text primary key,
   user_id uuid not null references users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
+-- Addresses that hard-bounced or filed a spam complaint (populated by the
+-- Resend bounce webhook). We refuse to send to these to protect deliverability.
+create table if not exists email_suppressions (
+  email text primary key,
+  reason text,
   created_at timestamptz not null default now()
 );
 

@@ -212,6 +212,13 @@ export const supabaseStore = {
       .eq("email", email.toLowerCase());
   },
 
+  async updatePassword(email: string, newPassword: string): Promise<void> {
+    await sb()
+      .from("users")
+      .update({ password_hash: hashPassword(newPassword) })
+      .eq("email", email.toLowerCase());
+  },
+
   /* OTP */
   async saveOtp(rec: OtpRecord): Promise<void> {
     await sb()
@@ -414,5 +421,28 @@ export const supabaseStore = {
         .insert({ user_id: userId, program_id: programId });
     }
     return this.getShortlist(userId);
+  },
+
+  /* Email suppression (hard bounces / complaints) */
+  async isEmailSuppressed(email: string): Promise<boolean> {
+    const { data } = await sb()
+      .from("email_suppressions")
+      .select("email")
+      .eq("email", email.trim().toLowerCase())
+      .maybeSingle();
+    return !!data;
+  },
+
+  async suppressEmail(email: string): Promise<void> {
+    await sb()
+      .from("email_suppressions")
+      .upsert({ email: email.trim().toLowerCase() }, { onConflict: "email" });
+  },
+
+  async unsuppressEmail(email: string): Promise<void> {
+    await sb()
+      .from("email_suppressions")
+      .delete()
+      .eq("email", email.trim().toLowerCase());
   },
 };

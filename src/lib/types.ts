@@ -25,8 +25,8 @@ export interface OtpRecord {
   code: string;
   /** Epoch ms when the OTP expires (created + 60s). */
   expiresAt: number;
-  /** Purpose lets us reuse the OTP flow for register + login. */
-  purpose: "register" | "login";
+  /** Purpose lets us reuse the OTP flow for register + login + password reset. */
+  purpose: "register" | "login" | "reset";
   attempts: number;
 }
 

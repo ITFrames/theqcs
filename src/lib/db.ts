@@ -49,6 +49,7 @@ interface Store {
   documents: Map<string, StudentDocument[]>; // key: userId
   shortlist: Map<string, Set<string>>; // key: userId -> program ids
   sessions: Map<string, string>; // key: token -> userId
+  suppressions: Set<string>; // hard-bounced / complained emails (lowercased)
 }
 
 // Persist across HMR reloads in dev by hanging the store off globalThis.
@@ -63,6 +64,7 @@ function createStore(): Store {
     documents: new Map(),
     shortlist: new Map(),
     sessions: new Map(),
+    suppressions: new Set(),
   };
 }
 
@@ -118,6 +120,12 @@ const memoryStore = {
     const store = getStore();
     const user = store.users.get(email.toLowerCase());
     if (user) user.emailVerified = true;
+  },
+
+  async updatePassword(email: string, newPassword: string): Promise<void> {
+    const store = getStore();
+    const user = store.users.get(email.toLowerCase());
+    if (user) user.passwordHash = hashPassword(newPassword);
   },
 
   /* ---------------------------------------------------------------------- */
@@ -250,6 +258,22 @@ const memoryStore = {
     else set.add(programId);
     store.shortlist.set(userId, set);
     return Array.from(set);
+  },
+
+  /* ---------------------------------------------------------------------- */
+  /* Email suppression (hard bounces / complaints)                          */
+  /* ---------------------------------------------------------------------- */
+
+  async isEmailSuppressed(email: string): Promise<boolean> {
+    return getStore().suppressions.has(email.trim().toLowerCase());
+  },
+
+  async suppressEmail(email: string): Promise<void> {
+    getStore().suppressions.add(email.trim().toLowerCase());
+  },
+
+  async unsuppressEmail(email: string): Promise<void> {
+    getStore().suppressions.delete(email.trim().toLowerCase());
   },
 };
 

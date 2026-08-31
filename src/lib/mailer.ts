@@ -28,9 +28,16 @@ export interface SendOtpResult {
   error?: string;
 }
 
-function otpEmailHtml(code: string, purpose: "register" | "login"): string {
+function otpEmailHtml(
+  code: string,
+  purpose: "register" | "login" | "reset",
+): string {
   const heading =
-    purpose === "register" ? "Verify your email" : "Sign-in verification";
+    purpose === "register"
+      ? "Verify your email"
+      : purpose === "reset"
+        ? "Reset your password"
+        : "Sign-in verification";
   const body = `
     <h2 style="font-size:20px;color:#1e3a5f;margin:0 0 4px">${heading}</h2>
     <p style="font-size:14px;color:#4a5568;margin:0 0 16px;line-height:1.6">
@@ -53,7 +60,7 @@ function otpEmailHtml(code: string, purpose: "register" | "login"): string {
 export async function sendOtpEmail(
   to: string,
   code: string,
-  purpose: "register" | "login",
+  purpose: "register" | "login" | "reset",
 ): Promise<SendOtpResult> {
   const provider = (process.env.OTP_DELIVERY_PROVIDER || "").toLowerCase();
   const apiKey = process.env.RESEND_API_KEY;
@@ -77,7 +84,9 @@ export async function sendOtpEmail(
         subject:
           purpose === "register"
             ? "Your QCS ABROAD verification code"
-            : "Your QCS ABROAD sign-in code",
+            : purpose === "reset"
+              ? "Your QCS ABROAD password reset code"
+              : "Your QCS ABROAD sign-in code",
         html: otpEmailHtml(code, purpose),
       }),
     });
